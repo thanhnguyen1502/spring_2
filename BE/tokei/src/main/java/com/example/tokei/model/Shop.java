@@ -1,71 +1,43 @@
 package com.example.tokei.model;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @Entity
-@Table(name = "shop")
 public class Shop {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id",nullable = false)
-    private Integer id;
-
-    private String name;
-    private String phone;
-    private String address;
-    private String email;
+    @Column(name = "id_shop")
+    private Integer idShop;
+    private LocalDate date;
     @ManyToOne
-    @JoinColumn(name = "product_id", referencedColumnName = "product_id")
-    private Product product;
+    @JoinColumn(name = "id_user", referencedColumnName = "id_user")
+    private User user;
 
     public Shop() {
     }
 
-    public Integer getId() {
-        return id;
+    public Integer getIdShop() {
+        return idShop;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setIdShop(Integer idShop) {
+        this.idShop = idShop;
     }
 
-    public String getName() {
-        return name;
+    public LocalDate getDate() {
+        return date;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setDate(LocalDate date) {
+        this.date = date;
     }
 
-    public String getPhone() {
-        return phone;
+    public User getUser() {
+        return user;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public Product getProduct() {
-        return product;
-    }
-
-    public void setProduct(Product product) {
-        this.product = product;
+    public void setUser(User user) {
+        this.user = user;
     }
 }
