@@ -8,15 +8,10 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_product")
     private Integer idProduct;
-
     private String name;
-
     private Double price;
-
     private String description;
-
     private String img;
-
     private int amount;
     @ManyToOne
     @JoinColumn(name = "id_brand", referencedColumnName = "id_brand")

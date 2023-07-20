@@ -11,8 +11,8 @@ public class Shop {
     private Integer idShop;
     private LocalDate date;
     @ManyToOne
-    @JoinColumn(name = "id_user", referencedColumnName = "id_user")
-    private User user;
+    @JoinColumn(name = "id_account", referencedColumnName = "id_account")
+    private Account account;
 
     public Shop() {
     }
@@ -33,11 +33,11 @@ public class Shop {
         this.date = date;
     }
 
-    public User getUser() {
-        return user;
+    public Account getAccount() {
+        return account;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUser(Account account) {
+        this.account = account;
     }
 }
