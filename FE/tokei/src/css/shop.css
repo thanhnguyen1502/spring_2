@@ -1,0 +1,10 @@
+
+/* Thêm flex container cho các button */
+.button-container {
+    display: flex;
+}
+
+/* Căn giữa các button bên trong container */
+.button-container button {
+    margin: auto;
+}

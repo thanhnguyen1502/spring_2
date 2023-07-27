@@ -1,78 +1,77 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
+import {findProduct} from "../service/ProductService";
 
 function Home() {
+    const [product, setProduct] = useState([]);
+    const [itemsToShow, setItemsToShow] = useState(6);
+    const [itemsPerLoad, setItemsPerLoad] = useState(6);
+    useEffect(() => {
+        const getProduct = async () => {
+            const productList = await findProduct();
+            setProduct(productList)
+        };
+        getProduct();
+    }, []);
 
+    const handleLoadMore = () => {
+        setItemsToShow(prevItems => prevItems + itemsPerLoad);
+    };
+    console.log(product)
     return (
         <>
             <>
+
                 <div id="preloader-active">
-                    <div className="preloader d-flex align-items-center justify-content-center">
+                    <div className="preloader d-flex align-items-center justify-content-center mt-3">
                         <div className="preloader-inner position-relative">
-                            <div className="preloader-circle" />
+                            <div className="preloader-circle"/>
                             <div className="preloader-img pere-text">
-                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTGYbuwWQP2H-EAyPOw-U_qJBFDLLtDjrUDpg&usqp=CAU" alt="" />
+                                <img
+                                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTGYbuwWQP2H-EAyPOw-U_qJBFDLLtDjrUDpg&usqp=CAU"
+                                    alt=""/>
                             </div>
                         </div>
                     </div>
                 </div>
+
                 <main>
-                    <div className="slider-area ">
-                        <div className="slider-active">
-                            <div className="single-slider slider-height d-flex align-items-center slide-bg">
-                                <div className="container">
-                                    <div className="row justify-content-between align-items-center">
-                                        <div className="col-xl-8 col-lg-8 col-md-8 col-sm-8">
-                                            <div className="hero__caption">
-                                                <h1
-                                                    data-animation="fadeInLeft"
-                                                    data-delay=".4s"
-                                                    data-duration="2000ms"
-                                                >
-                                                    Select Your New Perfect Style
-                                                </h1>
-                                                <p
-                                                    data-animation="fadeInLeft"
-                                                    data-delay=".7s"
-                                                    data-duration="2000ms"
-                                                >
-                                                    Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                                                    laboris nisi ut aliquip ex ea commodo consequat is aute
-                                                    irure.
-                                                </p>
-                                                {/* Hero-btn */}
-                                                <div
-                                                    className="hero__btn"
-                                                    data-animation="fadeInLeft"
-                                                    data-delay=".8s"
-                                                    data-duration="2000ms"
-                                                >
-                                                    <a href="industries.html" className="btn hero-btn">
-                                                        Shop Now
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="col-xl-3 col-lg-3 col-md-4 col-sm-4 d-none d-sm-block">
-                                            <div
-                                                className="hero__img"
-                                                data-animation="bounceIn"
-                                                data-delay=".4s"
-                                            >
-                                                <img
-                                                    src="https://o.remove.bg/downloads/fba3d49d-616b-462d-994f-62bea6f8f7c3/a-removebg-preview.png"
-                                                    alt=""
-                                                    className=" heartbeat"
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                    <div>
+
+                    </div>
+                    <div id="carouselExampleControls" className="carousel slide" data-bs-ride="carousel">
+                        <div className="carousel-inner">
+                            <div className="carousel-item active">
+                                <img
+                                    src="https://cdn.tamsonvn.com/wp-content/webp-express/webp-images/uploads/2022/08/Patek-2-1536x599.jpg.webp"
+                                    className="d-block w-100" alt="..."/>
+                            </div>
+                            <div className="carousel-item">
+                                <img
+                                    src="https://cdn.tamsonvn.com/wp-content/webp-express/webp-images/uploads/2022/08/CHOPARD-opt2-1536x599.jpg.webp"
+                                    className="d-block w-100" alt="..."/>
+                            </div>
+                            <div className="carousel-item">
+                                <img
+                                    src="https://cdn.tamsonvn.com/wp-content/webp-express/webp-images/uploads/2022/08/Vacheron-Constantin-opt-1-1536x599.jpg.webp"
+                                    className="d-block w-100" alt="..."/>
                             </div>
                         </div>
+                        <button className="carousel-control-prev" type="button"
+                                data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                            <span className="carousel-control-prev-icon" aria-hidden="true"
+                                  style={{marginTop: "280%"}}></span>
+                            <span className="visually-hidden">Previous</span>
+                        </button>
+                        <button className="carousel-control-next" type="button"
+                                data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                            <span className="carousel-control-next-icon" aria-hidden="true"
+                                  style={{marginTop: "280%"}}></span>
+                            <span className="visually-hidden">Next</span>
+                        </button>
                     </div>
+
                     <section className="new-product-area section-padding30">
                         <div className="container">
-                            {/* Section tittle */}
                             <div className="row">
                                 <div className="col-xl-12">
                                     <div className="section-tittle mb-70">
@@ -84,39 +83,45 @@ function Home() {
                                 <div className="col-xl-4 col-lg-4 col-md-6 col-sm-6">
                                     <div className="single-new-pro mb-30 text-center">
                                         <div className="product-img">
-                                            <img src="https://themewagon.github.io/timezone/assets/img/gallery/new_product1.png" alt="" />
+                                            <img
+                                                src="https://themewagon.github.io/timezone/assets/img/gallery/new_product1.png"
+                                                alt=""/>
                                         </div>
                                         <div className="product-caption">
                                             <h3>
-                                                <a href="">Thermo Ball Etip Gloves</a>
+                                                <a style={{textDecoration: "none"}}  href="">Thermo Ball Etip Gloves</a>
                                             </h3>
-                                            <span>$ 45,743</span>
+                                            <span>45,743,000 vnd</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="col-xl-4 col-lg-4 col-md-6 col-sm-6 mx-2">
+                                    <div className="single-new-pro mb-30 text-center">
+                                        <div className="product-img">
+                                            <img
+                                                src="https://themewagon.github.io/timezone/assets/img/gallery/new_product2.png"
+                                                alt=""/>
+                                        </div>
+                                        <div className="product-caption">
+                                            <h3>
+                                                <a style={{textDecoration: "none"}}  href="">Thermo Ball Etip Gloves</a>
+                                            </h3>
+                                            <span>45,743,000 vnd</span>
                                         </div>
                                     </div>
                                 </div>
                                 <div className="col-xl-4 col-lg-4 col-md-6 col-sm-6">
                                     <div className="single-new-pro mb-30 text-center">
                                         <div className="product-img">
-                                            <img src="https://themewagon.github.io/timezone/assets/img/gallery/new_product2.png" alt="" />
+                                            <img
+                                                src="https://themewagon.github.io/timezone/assets/img/gallery/new_product3.png"
+                                                alt=""/>
                                         </div>
                                         <div className="product-caption">
                                             <h3>
-                                                <a href="">Thermo Ball Etip Gloves</a>
+                                                <a style={{textDecoration: "none"}}  href="">Thermo Ball Etip Gloves</a>
                                             </h3>
-                                            <span>$ 45,743</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="col-xl-4 col-lg-4 col-md-6 col-sm-6">
-                                    <div className="single-new-pro mb-30 text-center">
-                                        <div className="product-img">
-                                            <img src="https://themewagon.github.io/timezone/assets/img/gallery/new_product3.png" alt="" />
-                                        </div>
-                                        <div className="product-caption">
-                                            <h3>
-                                                <a href="">Thermo Ball Etip Gloves</a>
-                                            </h3>
-                                            <span>$ 45,743</span>
+                                            <span>45,743,000 vnd</span>
                                         </div>
                                     </div>
                                 </div>
@@ -124,59 +129,7 @@ function Home() {
                         </div>
                     </section>
 
-                    <div className="gallery-area">
-                        <div className="container-fluid p-0 fix">
-                            <div className="row">
-                                <div className="col-xl-6 col-lg-4 col-md-6 col-sm-6">
-                                    <div className="single-gallery mb-30">
-                                        <div
-                                            className="gallery-img big-img"
-                                            style={{
-                                                backgroundImage: "url(https://inwfile.com/s-fs/0lcbud.jpg)"
-                                            }}
-                                        />
-                                    </div>
-                                </div>
-                                <div className="col-xl-3 col-lg-4 col-md-6 col-sm-6">
-                                    <div className="single-gallery mb-30">
-                                        <div
-                                            className="gallery-img big-img"
-                                            style={{
-                                                backgroundImage: "url(https://casiomytho.com/wp-content/uploads/2018/05/%C4%90%E1%BB%93ng-h%E1%BB%93-Daniel-Wellington.jpg)"
-                                            }}
-                                        />
-                                    </div>
-                                </div>
-                                <div className="col-xl-3 col-lg-4 col-md-12">
-                                    <div className="row">
-                                        <div className="col-xl-12 col-lg-12 col-md-6 col-sm-6">
-                                            <div className="single-gallery mb-30">
-                                                <div
-                                                    className="gallery-img small-img"
-                                                    style={{
-                                                        backgroundImage: "url(https://cdn.galle.vn/media/upload_images/images/2021/08/13/seiko-1.jpg)"
-                                                    }}
-                                                />
-                                            </div>
-                                        </div>
-                                        <div className="col-xl-12 col-lg-12  col-md-6 col-sm-6">
-                                            <div className="single-gallery mb-30">
-                                                <div
-                                                    className="gallery-img small-img"
-                                                    style={{
-                                                        backgroundImage: "url(https://product.hstatic.net/1000223154/product/z4087199266816_3da6fec934926600c874c9bc4f47d8d1_fed4dec81fff450aa0ccb8769934b0eb.jpg)"
-                                                    }}
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    {/* Gallery Area End */}
-                    {/*? Popular Items Start */}
-                    <div className="popular-items section-padding30">
+                    <div className="popular-items">
                         <div className="container">
                             {/* Section tittle */}
                             <div className="row justify-content-center">
@@ -192,120 +145,38 @@ function Home() {
                                 </div>
                             </div>
                             <div className="row">
-                                <div className="col-xl-4 col-lg-4 col-md-6 col-sm-6">
-                                    <div className="single-popular-items mb-50 text-center">
-                                        <div className="popular-img">
-                                            <img src="https://themewagon.github.io/timezone/assets/img/gallery/popular1.png" alt="" />
-                                            <div className="img-cap">
-                                                <span>Add to cart</span>
+                                {product?.slice(0, itemsToShow)?.map((products, index) => (
+                                    <div className="col-xl-4 col-lg-4 col-md-6 col-sm-6" key={index}>
+                                        <div className="single-popular-items mb-50 text-center">
+                                            <div className="popular-img">
+                                                <img
+                                                    src={products.img}
+                                                    alt=""/>
+                                                <div className="img-cap">
+                                                    <span>Thêm vào giỏ hàng</span>
+                                                </div>
+                                                <div className="favorit-items">
+                                                    <span className="flaticon-heart"/>
+                                                </div>
                                             </div>
-                                            <div className="favorit-items">
-                                                <span className="flaticon-heart" />
+                                            <div className="popular-caption">
+                                                <h3>
+                                                    <a style={{textDecoration: "none", fontSize: '20px'}}
+                                                       href="">{products.name}</a>
+                                                </h3>
+                                                <span>{new Intl.NumberFormat().format(products.price)}vnd</span>
                                             </div>
-                                        </div>
-                                        <div className="popular-caption">
-                                            <h3>
-                                                <a href="product_details.html">Thermo Ball Etip Gloves</a>
-                                            </h3>
-                                            <span>$ 45,743</span>
                                         </div>
                                     </div>
-                                </div>
-                                <div className="col-xl-4 col-lg-4 col-md-6 col-sm-6">
-                                    <div className="single-popular-items mb-50 text-center">
-                                        <div className="popular-img">
-                                            <img src="https://themewagon.github.io/timezone/assets/img/gallery/popular2.png" alt="" />
-                                            <div className="img-cap">
-                                                <span>Add to cart</span>
-                                            </div>
-                                            <div className="favorit-items">
-                                                <span className="flaticon-heart" />
-                                            </div>
-                                        </div>
-                                        <div className="popular-caption">
-                                            <h3>
-                                                <a href="product_details.html">Thermo Ball Etip Gloves</a>
-                                            </h3>
-                                            <span>$ 45,743</span>
-                                        </div>
+                                ))}
+                                {itemsToShow < product.length && (
+                                    <div className="text-center mt-3">
+                                        <button style={{width: 100}} className="btn btn-outline-dark"
+                                                onClick={handleLoadMore}>
+                                            See <ion-icon name="chevron-down-outline"></ion-icon>
+                                        </button>
                                     </div>
-                                </div>
-                                <div className="col-xl-4 col-lg-4 col-md-6 col-sm-6">
-                                    <div className="single-popular-items mb-50 text-center">
-                                        <div className="popular-img">
-                                            <img src="https://themewagon.github.io/timezone/assets/img/gallery/popular3.png" alt="" />
-                                            <div className="img-cap">
-                                                <span>Add to cart</span>
-                                            </div>
-                                            <div className="favorit-items">
-                                                <span className="flaticon-heart" />
-                                            </div>
-                                        </div>
-                                        <div className="popular-caption">
-                                            <h3>
-                                                <a href="product_details.html">Thermo Ball Etip Gloves</a>
-                                            </h3>
-                                            <span>$ 45,743</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="col-xl-4 col-lg-4 col-md-6 col-sm-6">
-                                    <div className="single-popular-items mb-50 text-center">
-                                        <div className="popular-img">
-                                            <img src="https://themewagon.github.io/timezone/assets/img/gallery/popular4.png" alt="" />
-                                            <div className="img-cap">
-                                                <span>Add to cart</span>
-                                            </div>
-                                            <div className="favorit-items">
-                                                <span className="flaticon-heart" />
-                                            </div>
-                                        </div>
-                                        <div className="popular-caption">
-                                            <h3>
-                                                <a href="product_details.html">Thermo Ball Etip Gloves</a>
-                                            </h3>
-                                            <span>$ 45,743</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="col-xl-4 col-lg-4 col-md-6 col-sm-6">
-                                    <div className="single-popular-items mb-50 text-center">
-                                        <div className="popular-img">
-                                            <img src="https://themewagon.github.io/timezone/assets/img/gallery/popular5.png" alt="" />
-                                            <div className="img-cap">
-                                                <span>Add to cart</span>
-                                            </div>
-                                            <div className="favorit-items">
-                                                <span className="flaticon-heart" />
-                                            </div>
-                                        </div>
-                                        <div className="popular-caption">
-                                            <h3>
-                                                <a href="product_details.html">Thermo Ball Etip Gloves</a>
-                                            </h3>
-                                            <span>$ 45,743</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="col-xl-4 col-lg-4 col-md-6 col-sm-6">
-                                    <div className="single-popular-items mb-50 text-center">
-                                        <div className="popular-img">
-                                            <img src="https://themewagon.github.io/timezone/assets/img/gallery/popular6.png" alt="" />
-                                            <div className="img-cap">
-                                                <span>Add to cart</span>
-                                            </div>
-                                            <div className="favorit-items">
-                                                <span className="flaticon-heart" />
-                                            </div>
-                                        </div>
-                                        <div className="popular-caption">
-                                            <h3>
-                                                <a href="product_details.html">Thermo Ball Etip Gloves</a>
-                                            </h3>
-                                            <span>$ 45,743</span>
-                                        </div>
-                                    </div>
-                                </div>
+                                )}
                             </div>
                         </div>
                     </div>
@@ -327,14 +198,18 @@ function Home() {
                                 </div>
                                 <div className="col-lg-6 col-md-6 col-sm-10">
                                     <div className="choice-watch-img mb-40">
-                                        <img src="https://themewagon.github.io/timezone/assets/img/gallery/choce_watch1.png" alt="" />
+                                        <img
+                                            src="https://themewagon.github.io/timezone/assets/img/gallery/choce_watch1.png"
+                                            alt=""/>
                                     </div>
                                 </div>
                             </div>
                             <div className="row align-items-center justify-content-between">
                                 <div className="col-lg-6 col-md-6 col-sm-10">
                                     <div className="choice-watch-img mb-40">
-                                        <img src="https://themewagon.github.io/timezone/assets/img/gallery/choce_watch2.png" alt="" />
+                                        <img
+                                            src="https://themewagon.github.io/timezone/assets/img/gallery/choce_watch2.png"
+                                            alt=""/>
                                     </div>
                                 </div>
                                 <div className="col-lg-5 col-md-6">
@@ -353,47 +228,16 @@ function Home() {
                             </div>
                         </div>
                     </div>
-                    {/* Watch Choice  End*/}
-                    {/*? Shop Method Start*/}
-                    <div className="shop-method-area">
-                        <div className="container">
-                            <div className="method-wrapper">
-                                <div className="row d-flex justify-content-between">
-                                    <div className="col-xl-4 col-lg-4 col-md-6">
-                                        <div className="single-method mb-40">
-                                            <i className="ti-package" />
-                                            <h6>Free Shipping Method</h6>
-                                            <p>aorem ixpsacdolor sit ameasecur adipisicing elitsf edasd.</p>
-                                        </div>
-                                    </div>
-                                    <div className="col-xl-4 col-lg-4 col-md-6">
-                                        <div className="single-method mb-40">
-                                            <i className="ti-unlock" />
-                                            <h6>Secure Payment System</h6>
-                                            <p>aorem ixpsacdolor sit ameasecur adipisicing elitsf edasd.</p>
-                                        </div>
-                                    </div>
-                                    <div className="col-xl-4 col-lg-4 col-md-6">
-                                        <div className="single-method mb-40">
-                                            <i className="ti-reload" />
-                                            <h6>Secure Payment System</h6>
-                                            <p>aorem ixpsacdolor sit ameasecur adipisicing elitsf edasd.</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </main>
                 <div className="search-model-box">
                     <div className="h-100 d-flex align-items-center justify-content-center">
                         <div className="search-close-btn">+</div>
                         <form className="search-model-form">
-                            <input type="text" id="search-input" placeholder="Searching key....." />
+                            <input type="text" id="search-input" placeholder="Searching key....."/>
                         </form>
                     </div>
                 </div>
-   
+
             </>
 
         </>

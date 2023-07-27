@@ -4,7 +4,7 @@ function Footer(props) {
     return (
         <>
             <footer>
-                <div className="footer-area footer-padding">
+                <div className="footer-area footer-padding mt-4" style={{backgroundColor: "#FFF7B6"}}>
                     <div className="container">
                         <div className="row d-flex justify-content-between">
                             <div className="col-xl-3 col-lg-3 col-md-5 col-sm-6">

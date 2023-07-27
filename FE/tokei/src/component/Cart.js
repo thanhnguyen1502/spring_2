@@ -4,10 +4,10 @@ function Cart() {
     return (
         <>
             <>
-                <section className="cart_area">
+                <section>
                     <div className="container">
                         <div className="cart_inner">
-                            <div className="table-responsive">
+                            <div>
                                 <table className="table">
                                     <thead>
                                     <tr>
