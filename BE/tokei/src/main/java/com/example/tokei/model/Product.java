@@ -7,7 +7,7 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_product")
-    private Integer idProduct;
+    private int idProduct;
     private String name;
     private Double price;
     private String description;

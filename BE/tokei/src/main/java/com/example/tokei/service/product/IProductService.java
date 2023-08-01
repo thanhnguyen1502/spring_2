@@ -7,5 +7,7 @@ import java.util.List;
 public interface IProductService {
     List<Product> showList();
 
-    Product findById(int id);
+    List<Product> findAllByIdProduct(Integer id);
+
+    List<Product> getProductByTypeProduct(Integer type);
 }

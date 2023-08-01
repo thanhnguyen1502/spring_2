@@ -21,7 +21,14 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public Product findById(int id) {
-        return productRepository.findById(id);
+    public List<Product> findAllByIdProduct(Integer id) {
+        return productRepository.findAllByIdProduct(id);
     }
+
+    @Override
+    public List<Product> getProductByTypeProduct(Integer type) {
+        return productRepository.getProductByType(type);
+    }
+
+
 }

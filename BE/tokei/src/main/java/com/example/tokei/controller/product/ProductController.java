@@ -46,8 +46,13 @@ public class ProductController {
     }
 
     @GetMapping("/{idProduct}")
-    public Product findProductById(@PathVariable("idProduct") Integer id) {
-        return productService.findById(id);
+    public List<Product> findProductById(@PathVariable("idProduct") Integer id) {
+        return productService.findAllByIdProduct(id);
     }
 
+    @GetMapping("/productByType/{type}")
+    public ResponseEntity<List<Product>> displayProductByType(@PathVariable Integer type) {
+        List<Product> products = productService.getProductByTypeProduct(type);
+        return new ResponseEntity<>(products, HttpStatus.OK);
+    }
 }
