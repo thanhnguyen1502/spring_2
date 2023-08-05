@@ -30,28 +30,6 @@ export function Login() {
         setShowPassword((pre) => !pre);
     }
 
-    const handleEmail = async () => {
-        const email = document.querySelector(".email-password").value;
-        let genenicRequest = {
-            emailConfirm: email,
-            location: window.location.origin,
-        }
-        getEmail(genenicRequest)
-            .then((e) => {
-                document.cookie = "token=" + e.data.token;
-                console.log(e.data.token);
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Gửi email thành công',
-                    showConfirmButton: false,
-                    timer: 1500
-                })
-            })
-            .catch(() => {
-                setFailedAccount("Email không hợp lệ")
-            })
-    }
-
     if (!!sessionStorage.getItem("TOKEN")) {
         navigate('/');
         return null;
@@ -63,24 +41,24 @@ export function Login() {
                 <div className="form-value">
                     <Formik
                         initialValues={{
-                            nameAccount: "",
+                            username: "",
                             password: ""
                         }}
 
                         validationSchema={Yup.object().shape({
-                            nameAccount: Yup.string().required("trường này không được để trống"),
+                            username: Yup.string().required("This field cannot be left blank"),
 
                             password: Yup.string()
-                                .required("trường này không được để trống")
-                                .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,10}$/, "mật khẩu phải có ít nhất 1 chữ hoa,ít nhất 1 chữ thường, có 1 ký tự và số"),
+                                .required("This field cannot be left blank")
                         })}
 
                         onSubmit={(values) => {
+
                             postLogin(values)
                                 .then((e) => {
                                     sessionStorage.setItem('TOKEN', e.accessToken);
-                                    sessionStorage.setItem('USERNAME', e.nameAccount);
-                                    sessionStorage.setItem('ROLES', e.roles[0].authority)
+                                    sessionStorage.setItem('USERNAME', e.username);
+                                    sessionStorage.setItem('roles', e.roles[0])
                                     window.location.href = '/';
                                 })
                                 .catch(() => {
@@ -93,22 +71,18 @@ export function Login() {
                             <h2>Login</h2>
                             <div className="inputbox">
                                 <ion-icon name="mail-outline"/>
-                                <Field type="text" name="nameAccount"/>
-                                <label htmlFor="">Email</label>
-                                <ErrorMessage name="nameAccount" className="text-danger col-12" component="span"/>
+                                <Field type="text" name="username"/>
+                                <label htmlFor="">Username</label>
+                                <ErrorMessage name="username" className="text-black col-12" component="span"/>
                             </div>
 
                             <div className="inputbox">
                                 <ion-icon name="lock-closed-outline"/>
                                 <Field type="password" name="password"/>
                                 <span className="password-icon" onClick={() => handlePassword()}>
-                                        <FontAwesomeIcon icon={showPassword ? faEye : faEyeSlash}/>
                                     </span>
                                 <label htmlFor="">Password</label>
-                                <ErrorMessage name="password" className="text-danger col-12" component="span"/>
-                                {failedAccount && (
-                                    <span className="text-danger col-12">{failedAccount}</span>
-                                )}
+                                <ErrorMessage name="password" className="text-black col-12" component="span"/>
                             </div>
                             <button type="submit">Log in</button>
                             <div className="d-flex justify-content-center text-center mt-4 pt-1">

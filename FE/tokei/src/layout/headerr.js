@@ -1,12 +1,16 @@
 import React, {useEffect, useState} from "react";
 import "../css/header.css";
-import {Link} from "react-router-dom";
+import {Link, NavLink} from "react-router-dom";
+import {useParams} from "react-router";
+import {findProductById, findUserByEmail, getAllCartDetail} from "../service/ProductService";
 
 export const Header = () => {
+
     const [cartItems, setCartItems] = useState([]);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isMediaQueryMatched, setIsMediaQueryMatched] = useState(false);
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+    const param = useParams()
 
     useEffect(() => {
         const handleScroll = () => {
@@ -59,13 +63,13 @@ export const Header = () => {
     const logout = () => {
         sessionStorage.removeItem("TOKEN");
         sessionStorage.removeItem("USERNAME");
-        sessionStorage.removeItem("ROLES");
-        window.location.href = '/login';
+        sessionStorage.removeItem("roles");
+        window.location.href = '/';
     };
 
     return (
-        <header className={isMenuOpen ? "open" : ""}>
-            <div className="header-area" style={{backgroundColor: "#FFF7B6"}}>
+        <header className={isMenuOpen ? "open" : ""} style={{height: "90px", marginTop: "-20px"}}>
+            <div className="header-area">
                 <div className="main-header header-sticky">
                     <div className="container-fluid">
                         <div className="menu-wrapper">
@@ -75,19 +79,18 @@ export const Header = () => {
                                         src="https://tulsaclocks.com/wp-content/uploads/2022/11/Grandfathers-Clock-Gallery-Logo-Black.png"
                                         alt=""
                                         height="90px"
-                                        width="120%"
+                                        width="120px"
                                     />
                                 </a>
                             </div>
                             <div className="main-menu d-none d-lg-block">
                                 <nav>
                                     <ul className={isMenuOpen ? "open" : ""}>
-                                        {sessionStorage.getItem("ROLES") === "ROLE_ADMIN" && (
+                                        {sessionStorage.getItem("roles") === "ADMIN" && (
                                             <>
                                                 <li>
                                                     <a style={{textDecoration: "none"}} href="/">Home</a>
                                                 </li>
-
                                                 <li>
                                                     <a style={{textDecoration: "none"}} href="/shop">shop</a>
                                                 </li>
@@ -95,157 +98,113 @@ export const Header = () => {
                                                     <a style={{textDecoration: "none"}} href="/about">about</a>
                                                 </li>
                                                 <li>
+                                                    <a style={{textDecoration: "none"}} href="/employee">Employee</a>
+                                                </li
+                                                >
+                                                <li>
+                                                    <a style={{textDecoration: "none"}} href="/cart/1">Cart</a>
+                                                    {/*<Link to={`/cart/${username}`} style={{ textDecoration: "none" }}>*/}
+                                                    {/*    Cart*/}
+                                                    {/*</Link>*/}
+
+                                                </li>
+
+                                                <li>
                                                     <Link to="/profile"
-                                                          style={{textDecoration: "none"}}>{sessionStorage.getItem("USERNAME")}</Link>
+                                                          style={{
+                                                              textDecoration: "none",
+                                                              color: "navy"
+                                                          }}>Hi, {sessionStorage.getItem("USERNAME")}</Link>
+                                                </li>
+                                                <li style={{marginLeft: "10px"}}>
+                                                    <Link style={{textDecoration: "none", color: "navy"}}
+                                                          onClick={() => logout()}>
+                                                        Log out
+                                                    </Link>
+                                                </li>
+                                            </>
+                                        )}
+
+                                        {sessionStorage.getItem("roles") === "USER" && (
+                                            <>
+                                                <li>
+                                                    <a style={{textDecoration: "none"}} href="/">Home</a>
                                                 </li>
                                                 <li>
-                                                    <Link style={{textDecoration: "none"}} onClick={() => logout()}>Đăng
-                                                        xuất</Link>
+                                                    <a style={{textDecoration: "none"}} href="/shop">shop</a>
                                                 </li>
-                                            </>
-                                        )}
+                                                <li>
+                                                    <a style={{textDecoration: "none"}} href="/about">about</a>
+                                                </li>
+                                                <li>
+                                                    <a style={{textDecoration: "none"}} href="/cart/2">Cart</a>
+                                                </li>
+                                                <li>
+                                                    <Link to="/profile"
+                                                          style={{
+                                                              textDecoration: "none",
+                                                              color: "navy"
+                                                          }}>Hi, {sessionStorage.getItem("USERNAME")}</Link>
+                                                </li>
+                                                <li style={{marginLeft: "10px"}}>
+                                                    <Link style={{textDecoration: "none", color: "navy"}}
+                                                          onClick={() => logout()}>
+                                                        Log out
+                                                    </Link>
+                                                </li>
 
-                                        {sessionStorage.getItem("ROLES") === "ROLE_STAFF" && (
-                                            <>
-
-                                                <div className="d-flex">
-                                                    <a className="navbar-brand mt-2" href="/"
-                                                       style={{paddingRight: "150%", marginLeft: 46}}>
-                                                        HypeSneaker
-                                                    </a>
-                                                    <button
-                                                        className="navbar-toggler"
-                                                        type="button"
-                                                        data-toggle="collapse"
-                                                        data-target="#ftco-nav"
-                                                        aria-controls="ftco-nav"
-                                                        aria-expanded="false"
-                                                        aria-label="Toggle navigation"
-                                                    >
-                                                        <span className="oi oi-menu"/> Menu
-                                                    </button>
-                                                    <div className="collapse navbar-collapse" id="ftco-nav">
-                                                        <ul className="navbar-nav ml-auto">
-                                                            <li className="nav-item">
-                                                                <a href="/" className="nav-link">
-                                                                    Home
-                                                                </a>
-                                                            </li>
-                                                            <li className="nav-item">
-                                                                <a href="/shop" className="nav-link">
-                                                                    Shop
-                                                                </a>
-                                                            </li>
-
-                                                            <li className="nav-item cta cta-colored">
-                                                                <a style={{width: 83}} href="/cart"
-                                                                   className="nav-link">
-                                                                    <span className="icon-shopping_cart"/>
-                                                                    [{cartItems.reduce((total, item) => total + item.quantity, 0)}]
-                                                                </a>
-                                                            </li>
-
-                                                            <li className="nav-item cta cta-colored">
-                                                                <a className="nav-link"
-                                                                   href="/profile">{sessionStorage.getItem("USERNAME")}</a>
-                                                            </li>
-
-                                                            <div className="dropdown mt-2">
-                                                                <button className="btn  dropdown-toggle" type="button"
-                                                                        id="dropdownMenuButton1"
-                                                                        data-bs-toggle="dropdown"
-                                                                        aria-expanded="false">
-                                                                    <img style={{width: 25}}
-                                                                         src="https://o.remove.bg/downloads/f09c7b66-9fc9-49c8-9c30-932a1cf27695/avatar-removebg-preview.png"></img>
-                                                                </button>
-                                                                <ul style={{width: 30}} className="dropdown-menu"
-                                                                    aria-labelledby="dropdownMenuButton1">
-
-                                                                    <li style={{textAlign: "center",}}>
-                                                                        <a onClick={() => logout()}>Log out</a>
-                                                                    </li>
-
-                                                                </ul>
-                                                            </div>
-                                                        </ul>
-                                                    </div>
-                                                </div>
 
                                             </>
                                         )}
+
                                         {!sessionStorage.getItem("TOKEN") && (
                                             <>
-                                                <div className="d-flex">
-                                                    <button
-                                                        className="navbar-toggler"
-                                                        type="button"
-                                                        data-toggle="collapse"
-                                                        data-target="#ftco-nav"
-                                                        aria-controls="ftco-nav"
-                                                        aria-expanded="false"
-                                                        aria-label="Toggle navigation"
-                                                    >
-                                                        <span className="oi oi-menu"/> Menu
-                                                    </button>
-                                                    <div className="collapse navbar-collapse" id="ftco-nav">
-                                                        <ul className="navbar-nav ml-auto">
-                                                            <li className="nav-item">
-                                                                <a href="/" className="nav-link">
-                                                                    Home
-                                                                </a>
-                                                            </li>
-                                                            <li className="nav-item">
-                                                                <a href="/shop" className="nav-link">
-                                                                    Shop
-                                                                </a>
-                                                            </li>
 
-                                                            <li className="nav-item cta cta-colored">
-                                                                <a href="/cart" className="nav-link">
-                                                                    <span className="icon-shopping_cart"/>
-                                                                    [{cartItems.reduce((total, item) => total + item.quantity, 0)}]
-                                                                </a>
+                                                <div className="header-right main-menu d-none d-lg-block">
+                                                    <ul>
+                                                        <li>
+                                                            <a style={{textDecoration: "none"}} href="/">Home</a>
+                                                        </li>
+                                                        <li>
+                                                            <a style={{textDecoration: "none"}} href="/shop">Shop</a>
+                                                        </li>
+                                                        <li>
+                                                            <a style={{textDecoration: "none"}} href="/about">About</a>
+                                                        </li>
+                                                        {isMenuOpen ? ( /* Kiểm tra trạng thái đăng nhập và ẩn/hiển thị phần tử tương ứng */
+                                                            <>
+                                                                <li style={{display: "none"}}>
+                                                                    <a style={{textDecoration: "none"}}
+                                                                       href="/login">Login</a>
+                                                                </li>
+                                                                <li>
+                                                                    <Link to="/profile" style={{
+                                                                        textDecoration: "none",
+                                                                        color: "navy"
+                                                                    }}>Hi, {sessionStorage.getItem("USERNAME")}</Link>
+                                                                </li>
+                                                                <li style={{marginLeft: "10px"}}>
+                                                                    <Link
+                                                                        style={{textDecoration: "none", color: "navy"}}
+                                                                        onClick={() => logout()}>Log out</Link>
+                                                                </li>
+                                                            </>
+                                                        ) : (
+                                                            <li>
+                                                                <a style={{textDecoration: "none", color: "navy"}}
+                                                                   href="/login">Login</a>
                                                             </li>
-
-                                                            <li style={{width: 84}} className="nav-item">
-                                                                <a style={{marginTop: "-4%"}} href="/api/login"
-                                                                   className="nav-link">
-                                                                    <img style={{width: 25}}
-                                                                         src="https://o.remove.bg/downloads/f09c7b66-9fc9-49c8-9c30-932a1cf27695/avatar-removebg-preview.png"></img>
-                                                                </a>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
+                                                        )}
+                                                    </ul>
                                                 </div>
                                             </>
                                         )}
                                     </ul>
                                 </nav>
                             </div>
-                            <div className="header-right">
-                                <ul>
-                                    <li>
-                                        <div className="nav-search search-switch">
-                                            <span className="flaticon-search" />
-                                        </div>
-                                    </li>
-                                    <li>
-                                        {" "}
-                                        <a href="login">
-                                            <span className="flaticon-user" />
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="cart">
-                                            <span className="flaticon-shopping-cart" />
-                                        </a>{" "}
-                                    </li>
-                                </ul>
-                            </div>
                         </div>
                     </div>
                 </div>
-
             </div>
         </header>
     );

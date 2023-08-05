@@ -4,7 +4,7 @@ function Footer(props) {
     return (
         <>
             <footer>
-                <div className="footer-area footer-padding mt-4" style={{backgroundColor: "#FFF7B6"}}>
+                <div className="footer-area footer-padding mt-4">
                     <div className="container">
                         <div className="row d-flex justify-content-between">
                             <div className="col-xl-3 col-lg-3 col-md-5 col-sm-6">
@@ -33,16 +33,16 @@ function Footer(props) {
                                         <h4>Quick Links</h4>
                                         <ul>
                                             <li>
-                                                <a href="#">About</a>
+                                                <a style={{textDecoration: "none"}} href="#">About</a>
                                             </li>
                                             <li>
-                                                <a href="#"> Offers &amp; Discounts</a>
+                                                <a style={{textDecoration: "none"}} href="#"> Offers &amp; Discounts</a>
                                             </li>
                                             <li>
-                                                <a href="#"> Get Coupon</a>
+                                                <a style={{textDecoration: "none"}} href="#"> Get Coupon</a>
                                             </li>
                                             <li>
-                                                <a href="#"> Contact Us</a>
+                                                <a style={{textDecoration: "none"}} href="#"> Contact Us</a>
                                             </li>
                                         </ul>
                                     </div>
@@ -54,16 +54,16 @@ function Footer(props) {
                                         <h4>New Products</h4>
                                         <ul>
                                             <li>
-                                                <a href="#">Woman Cloth</a>
+                                                <a style={{textDecoration: "none"}} href="#">Woman Cloth</a>
                                             </li>
                                             <li>
-                                                <a href="#">Fashion Accessories</a>
+                                                <a style={{textDecoration: "none"}} href="#">Fashion Accessories</a>
                                             </li>
                                             <li>
-                                                <a href="#"> Man Accessories</a>
+                                                <a style={{textDecoration: "none"}} href="#"> Man Accessories</a>
                                             </li>
                                             <li>
-                                                <a href="#"> Rubber made Toys</a>
+                                                <a style={{textDecoration: "none"}} href="#"> Rubber made Toys</a>
                                             </li>
                                         </ul>
                                     </div>
@@ -75,16 +75,16 @@ function Footer(props) {
                                         <h4>Support</h4>
                                         <ul>
                                             <li>
-                                                <a href="#">Frequently Asked Questions</a>
+                                                <a style={{textDecoration: "none"}} href="#">Frequently Asked Questions</a>
                                             </li>
                                             <li>
-                                                <a href="#">Terms &amp; Conditions</a>
+                                                <a style={{textDecoration: "none"}} href="#">Terms &amp; Conditions</a>
                                             </li>
                                             <li>
-                                                <a href="#">Privacy Policy</a>
+                                                <a style={{textDecoration: "none"}} href="#">Privacy Policy</a>
                                             </li>
                                             <li>
-                                                <a href="#">Report a Payment Issue</a>
+                                                <a style={{textDecoration: "none"}} href="#">Report a Payment Issue</a>
                                             </li>
                                         </ul>
                                     </div>

@@ -1,10 +1,7 @@
 
-/* Thêm flex container cho các button */
+/* CSS cho phần tử container chứa các nút button */
 .button-container {
     display: flex;
-}
-
-/* Căn giữa các button bên trong container */
-.button-container button {
-    margin: auto;
+    justify-content: center; /* Căn giữa theo chiều ngang */
+    align-items: center; /* Căn giữa theo chiều dọc */
 }

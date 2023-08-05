@@ -1,88 +1,434 @@
 import React, {useEffect, useState} from 'react';
-import {findById} from "../service/ProductService";
+import {findById, findProductById} from "../service/ProductService";
 import {useParams} from "react-router";
 
 
 function Detail() {
-    const [data, setData] = useState(null);
-    let param = useParams();
+    const [product, setProduct] = useState({})
+    const param = useParams()
+
+
+    console.log(product);
+
     useEffect(() => {
-        const getId = async () => {
-            let rs = await findById(param.idProduct);
-            setData(rs)
+        const fetchApi = async () => {
+            const result1 = await findProductById(param.id)
+            setProduct(result1)
         }
-        getId();
-    }, [param.idProduct]);
-    console.log(data)
+        fetchApi()
+    }, [param.id])
     return (
         <>
-            <main>
-                <div className="">
-                    <div className="container">
-                        {data && data.map((products, index) => (
-
-                        <div className="row justify-content-center" key={index}>
-                                <div className="col-lg-12" >
-                                    <div className="product_img_slide ">
-                                        <div className="single_product_img">
-                                            <img
-                                                src={products.img}
-                                                alt="#"
-                                                className="img-fluid"
-                                                style={{margin:"0 auto", display:"block"}}
-                                            />
+            <div
+                className="hero-wrap hero-bread"
+                style={{
+                    backgroundImage: 'url("https://png.pngtree.com/background/20230517/original/pngtree-clock-scene-is-placed-in-the-middle-of-an-old-clock-picture-image_2637111.jpg")',
+                }}
+            >
+                <div className="container">
+                    <div className="row no-gutters slider-text align-items-center justify-content-center">
+                        <div className="col-md-9 text-center">
+                            <h1
+                                style={{
+                                    position: 'absolute', // Đặt vị trí của phần tử chữ SHOP là absolute
+                                    top: '50%', // Đặt phần tử chữ SHOP ở giữa theo chiều dọc
+                                    left: '50%', // Đặt phần tử chữ SHOP ở giữa theo chiều ngang
+                                    transform: 'translate(-50%, -50%)', // Để căn giữa chữ SHOP
+                                    fontSize: '4rem', // Đặt kích thước chữ SHOP
+                                    fontWeight: 'bold', // Đặt độ đậm cho chữ SHOP
+                                    fontFamily: "fantasy"
+                                }}
+                            >
+                                D E T A i l
+                            </h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {<section>
+                <div className="container">
+                    <div className="row">
+                        <div className="col-lg-6 mb-5 mt-5">
+                            <a >
+                                <img style={{ width: "100%" }}
+                                     src={product.img}
+                                     className="img-fluid"
+                                     alt="Colorlib Template"
+                                />
+                            </a>
+                        </div>
+                        <div className="col-lg-6 product-details pl-md-5 ">
+                            <h3>{product.nameProduct}</h3>
+                            <div className="rating d-flex">
+                                <p className="text-left mr-4">
+                                    <a href="#" className="mr-2 text-decoration-none">
+                                        5.0
+                                    </a>
+                                    <a href="#">
+                                        <span className="ion-ios-star-outline" />
+                                    </a>
+                                    <a href="#">
+                                        <span className="ion-ios-star-outline" />
+                                    </a>
+                                    <a href="#">
+                                        <span className="ion-ios-star-outline" />
+                                    </a>
+                                    <a href="#">
+                                        <span className="ion-ios-star-outline" />
+                                    </a>
+                                    <a href="#">
+                                        <span className="ion-ios-star-outline" />
+                                    </a>
+                                </p>
+                                <p className="text-left mr-4">
+                                    <a href="#" className="mr-2 text-decoration-none" style={{ color: "#000" }}>
+                                        100 <span style={{ color: "#bbb"}}>Rating</span>
+                                    </a>
+                                </p>
+                                <p className="text-left">
+                                    <a href="#" className="mr-2 text-decoration-none" style={{ color: "#000" }}>
+                                        500 <span style={{ color: "#bbb" }}>Sold</span>
+                                    </a>
+                                </p>
+                            </div>
+                            <p className="price">
+                                <span>đ {new Intl.NumberFormat().format(product.price)}</span>
+                            </p>
+                            <p>
+                                A small river named Duden flows by their place and supplies it with
+                                the necessary regelialia. It is a paradisematic country, in which
+                                roasted parts of sentences fly into your mouth.
+                            </p>
+                            <p>
+                                On her way she met a copy. The copy warned the Little Blind Text,
+                                that where it came from it would have been rewritten a thousand
+                                times and everything that was left from its origin would be the word
+                                "and" and the Little Blind Text should turn around and return to its
+                                own, safe country. But nothing the copy said could convince her and
+                                so it didn’t take long until a few insidious Copy Writers ambushed
+                                her, made her drunk with Longe and Parole and dragged her into their
+                                agency, where they abused her for their.
+                            </p>
+                            <div className="row mt-4">
+                                <div className="col-md-6">
+                                    <div className="form-group d-flex">
+                                        <div className="select-wrap">
+                                            <div className="icon">
+                                                <span className="ion-ios-arrow-down" />
+                                            </div>
+                                            <select name="" id="" className="form-control">
+                                                <option value="">Small</option>
+                                                <option value="">Medium</option>
+                                                <option value="">Large</option>
+                                                <option value="">Extra Large</option>
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
-
-                            <div className="col-lg-8">
-                                <div className="single_product_text text-center">
-                                    <h3>{products.name}<br/>
-                                        rebound pillows
-                                    </h3>
-                                    <p>
-                                        Seamlessly empower fully researched growth strategies and
-                                        interoperable internal or “organic” sources. Credibly innovate
-                                        granular internal or “organic” sources whereas high standards in
-                                        web-readiness. Credibly innovate granular internal or organic
-                                        sources whereas high standards in web-readiness. Energistically
-                                        scale future-proof core competencies vis-a-vis impactful
-                                        experiences. Dramatically synthesize integrated schemas. with
-                                        optimal networks.
-                                    </p>
-                                    <div className="card_area">
-                                        <div className="product_count_area">
-                                            <p>Quantity</p>
-                                            <div className="product_count d-inline-block">
-                                                    <span className="product_count_item inumber-decrement"> {" "}<i
-                                                        className="ti-minus"/> </span>
-                                                <input
-                                                    className="product_count_item input-number"
-                                                    type="text"
-                                                    defaultValue={1}
-                                                    min={0}
-                                                    max={10}
-                                                /> <span
-                                                className="product_count_item number-increment"> {" "} </span></div>
-                                            <p>$5</p>
+                                <div className="w-100" />
+                                <div className="input-group col-md-6 d-flex mb-3">
+                                    <span className="input-group-btn mr-2">
+                                        <button
+                                            type="button"
+                                            className="quantity-left-minus btn"
+                                            data-type="minus"
+                                            data-field=""
+                                        >
+                                            <i className="ion-ios-remove" />
+                                        </button>
+                                    </span>
+                                    <input
+                                        type="text"
+                                        id="quantity"
+                                        name="quantity"
+                                        className="quantity form-control input-number"
+                                        defaultValue={1}
+                                        min={1}
+                                        max={100}
+                                    />
+                                    <span className="input-group-btn ml-2">
+                                        <button
+                                            type="button"
+                                            className="quantity-right-plus btn"
+                                            data-type="plus"
+                                            data-field=""
+                                        >
+                                            <i className="ion-ios-add" />
+                                        </button>
+                                    </span>
+                                </div>
+                                <div className="w-100" />
+                                <div className="col-md-12">
+                                    <p style={{ color: "#000" }}>80 piece available</p>
+                                </div>
+                            </div>
+                            <p>
+                                <a href="cart.html" className="btn btn-black py-3 px-5 mr-2">
+                                    Add to Cart
+                                </a>
+                                <a href="cart.html" className="btn btn-primary py-3 px-5">
+                                    Buy now
+                                </a>
+                            </p>
+                        </div>
+                    </div>
+                    <div className="row mt-5">
+                        <div className="col-md-12 nav-link-wrap">
+                            <div
+                                className="nav nav-pills d-flex text-center"
+                                id="v-pills-tab"
+                                role="tablist"
+                                aria-orientation="vertical"
+                            >
+                                <a
+                                    className="nav-link  active mr-lg-1"
+                                    id="v-pills-1-tab"
+                                    data-toggle="pill"
+                                    href="#v-pills-1"
+                                    role="tab"
+                                    aria-controls="v-pills-1"
+                                    aria-selected="true"
+                                >
+                                    Description
+                                </a>
+                                <a
+                                    className="nav-link mr-lg-1"
+                                    id="v-pills-2-tab"
+                                    data-toggle="pill"
+                                    href="#v-pills-2"
+                                    role="tab"
+                                    aria-controls="v-pills-2"
+                                    aria-selected="false"
+                                >
+                                    Manufacturer
+                                </a>
+                                <a
+                                    className="nav-link "
+                                    id="v-pills-3-tab"
+                                    data-toggle="pill"
+                                    href="#v-pills-3"
+                                    role="tab"
+                                    aria-controls="v-pills-3"
+                                    aria-selected="false"
+                                >
+                                    Reviews
+                                </a>
+                            </div>
+                        </div>
+                        <div className="col-md-12 tab-wrap">
+                            <div className="tab-content bg-light" id="v-pills-tabContent">
+                                <div
+                                    className="tab-pane fade show active"
+                                    id="v-pills-1"
+                                    role="tabpanel"
+                                    aria-labelledby="day-1-tab"
+                                >
+                                    <div className="p-4">
+                                        <h3 className="mb-4">{product.productName}</h3>
+                                        <p>
+                                            On her way she met a copy. The copy warned the Little Blind
+                                            Text, that where it came from it would have been rewritten a
+                                            thousand times and everything that was left from its origin
+                                            would be the word "and" and the Little Blind Text should turn
+                                            around and return to its own, safe country. But nothing the
+                                            copy said could convince her and so it didn’t take long until
+                                            a few insidious Copy Writers ambushed her, made her drunk with
+                                            Longe and Parole and dragged her into their agency, where they
+                                            abused her for their.
+                                        </p>
+                                    </div>
+                                </div>
+                                <div
+                                    className="tab-pane fade"
+                                    id="v-pills-2"
+                                    role="tabpanel"
+                                    aria-labelledby="v-pills-day-2-tab"
+                                >
+                                    <div className="p-4">
+                                        <h3 className="mb-4">{product.nameProduct}</h3>
+                                        <p>
+                                            On her way she met a copy. The copy warned the Little Blind
+                                            Text, that where it came from it would have been rewritten a
+                                            thousand times and everything that was left from its origin
+                                            would be the word "and" and the Little Blind Text should turn
+                                            around and return to its own, safe country. But nothing the
+                                            copy said could convince her and so it didn’t take long until
+                                            a few insidious Copy Writers ambushed her, made her drunk with
+                                            Longe and Parole and dragged her into their agency, where they
+                                            abused her for their.
+                                        </p>
+                                    </div>
+                                </div>
+                                <div
+                                    className="tab-pane fade"
+                                    id="v-pills-3"
+                                    role="tabpanel"
+                                    aria-labelledby="v-pills-day-3-tab"
+                                >
+                                    <div className="row p-4">
+                                        <div className="col-md-7">
+                                            <h3 className="mb-4">23 Reviews</h3>
+                                            <div className="review">
+                                                <div
+                                                    className="user-img"
+                                                    style={{ backgroundImage: "url(images/person_1.jpg)" }}
+                                                />
+                                                <div className="desc">
+                                                    <h4>
+                                                        <span className="text-left">Jacob Webb</span>
+                                                        <span className="text-right">14 March 2018</span>
+                                                    </h4>
+                                                    <p className="star">
+                                                        <span>
+                                                            <i className="ion-ios-star-outline" />
+                                                            <i className="ion-ios-star-outline" />
+                                                            <i className="ion-ios-star-outline" />
+                                                            <i className="ion-ios-star-outline" />
+                                                            <i className="ion-ios-star-outline" />
+                                                        </span>
+                                                        <span className="text-right">
+                                                            <a href="#" className="reply">
+                                                                <i className="icon-reply" />
+                                                            </a>
+                                                        </span>
+                                                    </p>
+                                                    <p>
+                                                        When she reached the first hills of the Italic
+                                                        Mountains, she had a last view back on the skyline of
+                                                        her hometown Bookmarksgrov
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div className="review">
+                                                <div
+                                                    className="user-img"
+                                                    style={{ backgroundImage: "url(images/person_2.jpg)" }}
+                                                />
+                                                <div className="desc">
+                                                    <h4>
+                                                        <span className="text-left">Jacob Webb</span>
+                                                        <span className="text-right">14 March 2018</span>
+                                                    </h4>
+                                                    <p className="star">
+                                                        <span>
+                                                            <i className="ion-ios-star-outline" />
+                                                            <i className="ion-ios-star-outline" />
+                                                            <i className="ion-ios-star-outline" />
+                                                            <i className="ion-ios-star-outline" />
+                                                            <i className="ion-ios-star-outline" />
+                                                        </span>
+                                                        <span className="text-right">
+                                                            <a href="#" className="reply">
+                                                                <i className="icon-reply" />
+                                                            </a>
+                                                        </span>
+                                                    </p>
+                                                    <p>
+                                                        When she reached the first hills of the Italic
+                                                        Mountains, she had a last view back on the skyline of
+                                                        her hometown Bookmarksgrov
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div className="review">
+                                                <div
+                                                    className="user-img"
+                                                    style={{ backgroundImage: "url(images/person_3.jpg)" }}
+                                                />
+                                                <div className="desc">
+                                                    <h4>
+                                                        <span className="text-left">Jacob Webb</span>
+                                                        <span className="text-right">14 March 2018</span>
+                                                    </h4>
+                                                    <p className="star">
+                                                        <span>
+                                                            <i className="ion-ios-star-outline" />
+                                                            <i className="ion-ios-star-outline" />
+                                                            <i className="ion-ios-star-outline" />
+                                                            <i className="ion-ios-star-outline" />
+                                                            <i className="ion-ios-star-outline" />
+                                                        </span>
+                                                        <span className="text-right">
+                                                            <a href="#" className="reply">
+                                                                <i className="icon-reply" />
+                                                            </a>
+                                                        </span>
+                                                    </p>
+                                                    <p>
+                                                        When she reached the first hills of the Italic
+                                                        Mountains, she had a last view back on the skyline of
+                                                        her hometown Bookmarksgrov
+                                                    </p>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div className="add_to_cart">
-                                            <a href="#" className="btn_3">
-                                                add to cart
-                                            </a>
+                                        <div className="col-md-4">
+                                            <div className="rating-wrap">
+                                                <h3 className="mb-4">Give a Review</h3>
+                                                <p className="star">
+                                                    <span>
+                                                        <i className="ion-ios-star-outline" />
+                                                        <i className="ion-ios-star-outline" />
+                                                        <i className="ion-ios-star-outline" />
+                                                        <i className="ion-ios-star-outline" />
+                                                        <i className="ion-ios-star-outline" />
+                                                        (98%)
+                                                    </span>
+                                                    <span>20 Reviews</span>
+                                                </p>
+                                                <p className="star">
+                                                    <span>
+                                                        <i className="ion-ios-star-outline" />
+                                                        <i className="ion-ios-star-outline" />
+                                                        <i className="ion-ios-star-outline" />
+                                                        <i className="ion-ios-star-outline" />
+                                                        <i className="ion-ios-star-outline" />
+                                                        (85%)
+                                                    </span>
+                                                    <span>10 Reviews</span>
+                                                </p>
+                                                <p className="star">
+                                                    <span>
+                                                        <i className="ion-ios-star-outline" />
+                                                        <i className="ion-ios-star-outline" />
+                                                        <i className="ion-ios-star-outline" />
+                                                        <i className="ion-ios-star-outline" />
+                                                        <i className="ion-ios-star-outline" />
+                                                        (98%)
+                                                    </span>
+                                                    <span>5 Reviews</span>
+                                                </p>
+                                                <p className="star">
+                                                    <span>
+                                                        <i className="ion-ios-star-outline" />
+                                                        <i className="ion-ios-star-outline" />
+                                                        <i className="ion-ios-star-outline" />
+                                                        <i className="ion-ios-star-outline" />
+                                                        <i className="ion-ios-star-outline" />
+                                                        (98%)
+                                                    </span>
+                                                    <span>0 Reviews</span>
+                                                </p>
+                                                <p className="star">
+                                                    <span>
+                                                        <i className="ion-ios-star-outline" />
+                                                        <i className="ion-ios-star-outline" />
+                                                        <i className="ion-ios-star-outline" />
+                                                        <i className="ion-ios-star-outline" />
+                                                        <i className="ion-ios-star-outline" />
+                                                        (98%)
+                                                    </span>
+                                                    <span>0 Reviews</span>
+                                                </p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        ))}
-
                     </div>
-
                 </div>
-                {/*================End Single Product Area =================*/}
-                {/* subscribe part here */}
-            </main>
+            </section>}
         </>
     );
 }

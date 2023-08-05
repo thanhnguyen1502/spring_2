@@ -84,18 +84,18 @@ function Home() {
                                     <div className="single-new-pro mb-30 text-center">
                                         <div className="product-img">
                                             <img
-                                                src="https://themewagon.github.io/timezone/assets/img/gallery/new_product1.png"
+                                                    src="https://themewagon.github.io/timezone/assets/img/gallery/new_product1.png"
                                                 alt=""/>
                                         </div>
                                         <div className="product-caption">
                                             <h3>
                                                 <a style={{textDecoration: "none"}}  href="">Thermo Ball Etip Gloves</a>
                                             </h3>
-                                            <span>45,743,000 vnd</span>
+                                            <span>45,743,000 VND</span>
                                         </div>
                                     </div>
                                 </div>
-                                <div className="col-xl-4 col-lg-4 col-md-6 col-sm-6 mx-2">
+                                <div className="col-xl-4 col-lg-4 col-md-6 col-sm-6">
                                     <div className="single-new-pro mb-30 text-center">
                                         <div className="product-img">
                                             <img
@@ -106,7 +106,7 @@ function Home() {
                                             <h3>
                                                 <a style={{textDecoration: "none"}}  href="">Thermo Ball Etip Gloves</a>
                                             </h3>
-                                            <span>45,743,000 vnd</span>
+                                            <span>45,743,000 VND</span>
                                         </div>
                                     </div>
                                 </div>
@@ -121,7 +121,7 @@ function Home() {
                                             <h3>
                                                 <a style={{textDecoration: "none"}}  href="">Thermo Ball Etip Gloves</a>
                                             </h3>
-                                            <span>45,743,000 vnd</span>
+                                            <span>45,743,000 VND</span>
                                         </div>
                                     </div>
                                 </div>
@@ -153,7 +153,7 @@ function Home() {
                                                     src={products.img}
                                                     alt=""/>
                                                 <div className="img-cap">
-                                                    <span>Thêm vào giỏ hàng</span>
+                                                    <span>Add to cart</span>
                                                 </div>
                                                 <div className="favorit-items">
                                                     <span className="flaticon-heart"/>
@@ -162,16 +162,16 @@ function Home() {
                                             <div className="popular-caption">
                                                 <h3>
                                                     <a style={{textDecoration: "none", fontSize: '20px'}}
-                                                       href="">{products.name}</a>
+                                                       href="">{products.productName}</a>
                                                 </h3>
-                                                <span>{new Intl.NumberFormat().format(products.price)}vnd</span>
+                                                <span>{new Intl.NumberFormat().format(products.price)} VND</span>
                                             </div>
                                         </div>
                                     </div>
                                 ))}
                                 {itemsToShow < product.length && (
                                     <div className="text-center mt-3">
-                                        <button style={{width: 100}} className="btn btn-outline-dark"
+                                        <button style={{width: 100, marginBottom:"20px"}} className="btn btn-outline-dark"
                                                 onClick={handleLoadMore}>
                                             See <ion-icon name="chevron-down-outline"></ion-icon>
                                         </button>
