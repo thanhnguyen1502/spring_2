@@ -1,16 +1,36 @@
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import "../css/header.css";
 import {Link, NavLink} from "react-router-dom";
-import {useParams} from "react-router";
-import {findProductById, findUserByEmail, getAllCartDetail} from "../service/ProductService";
+import {findUserName} from "../service/UserService";
+import {getAllCart} from "../service/CartService";
+import {QuantityContext} from "../component/QuantityContext";
 
 export const Header = () => {
-
-    const [cartItems, setCartItems] = useState([]);
+    const [userId, setUserId] = useState(0);
+    const username = sessionStorage.getItem('USERNAME');
+    const [user, setUser] = useState([0]);
+    const [cart, setCart] = useState([]);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isMediaQueryMatched, setIsMediaQueryMatched] = useState(false);
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-    const param = useParams()
+    const {iconQuantity, setIconQuantity} = useContext(QuantityContext)
+
+    useEffect(() => {
+        const getUserName = async () => {
+            const rs = await findUserName(username);
+            console.log(rs);
+            setUserId(rs)
+        }
+        getUserName();
+    }, []);
+
+    useEffect(() => {
+        const showListCart = async () => {
+            const rs = await getAllCart();
+            setCart(rs)
+        }
+        showListCart()
+    }, []);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -68,144 +88,234 @@ export const Header = () => {
     };
 
     return (
-        <header className={isMenuOpen ? "open" : ""} style={{height: "90px", marginTop: "-20px"}}>
-            <div className="header-area">
-                <div className="main-header header-sticky">
-                    <div className="container-fluid">
-                        <div className="menu-wrapper">
-                            <div className="logo">
-                                <a href="/">
-                                    <img
-                                        src="https://tulsaclocks.com/wp-content/uploads/2022/11/Grandfathers-Clock-Gallery-Logo-Black.png"
-                                        alt=""
-                                        height="90px"
-                                        width="120px"
-                                    />
-                                </a>
-                            </div>
-                            <div className="main-menu d-none d-lg-block">
-                                <nav>
-                                    <ul className={isMenuOpen ? "open" : ""}>
-                                        {sessionStorage.getItem("roles") === "ADMIN" && (
-                                            <>
-                                                <li>
-                                                    <a style={{textDecoration: "none"}} href="/">Home</a>
-                                                </li>
-                                                <li>
-                                                    <a style={{textDecoration: "none"}} href="/shop">shop</a>
-                                                </li>
-                                                <li>
-                                                    <a style={{textDecoration: "none"}} href="/about">about</a>
-                                                </li>
-                                                <li>
-                                                    <a style={{textDecoration: "none"}} href="/employee">Employee</a>
-                                                </li
-                                                >
-                                                <li>
-                                                    <a style={{textDecoration: "none"}} href="/cart/1">Cart</a>
-                                                    {/*<Link to={`/cart/${username}`} style={{ textDecoration: "none" }}>*/}
-                                                    {/*    Cart*/}
-                                                    {/*</Link>*/}
+        <header className={isMenuOpen ? "open" : ""} style={{marginTop: -20}}>
+            {sessionStorage.getItem("roles") === "ADMIN" && (
+                <>
+                    <nav
+                        className="navbar navbar-expand-lg navbar-dark ftco_navbar bg-success ftco-navbar-light"
+                        id="ftco-navbar" style={{height: "10%"}}
+                    >
+                        <div className="container" style={{marginTop: -13, marginRight: "22%"}}>
+                            <a href="/">
+                                <img
+                                    src="https://tulsaclocks.com/wp-content/uploads/2022/11/Grandfathers-Clock-Gallery-Logo-Black.png"
+                                    alt=""
+                                    height="90px"
+                                    width="120px"
+                                />
+                            </a>
+                            <button
+                                className="navbar-toggler"
+                                type="button"
+                                data-toggle="collapse"
+                                data-target="#ftco-nav"
+                                aria-controls="ftco-nav"
+                                aria-expanded="false"
+                                aria-label="Toggle navigation"
+                            >
+                                <span className="oi oi-menu"/> Menu
+                            </button>
+                            <div className="collapse navbar-collapse" id="ftco-nav"
+                                 style={{marginLeft: "38%", marginRight: "-29%"}}>
+                                <ul className="navbar-nav ml-auto">
+                                    <li className="nav-item active">
+                                        <a href="/" className="nav-link">
+                                            Home
+                                        </a>
+                                    </li>
+                                    <li className="nav-item dropdown">
+                                        <a
+                                            className="nav-link "
+                                            href="/shop"
+                                        >
+                                            Shop
+                                        </a>
 
-                                                </li>
+                                    </li>
+                                    <li className="nav-item">
+                                        <a href="/history" className="nav-link">
+                                            History
+                                        </a>
 
-                                                <li>
-                                                    <Link to="/profile"
-                                                          style={{
-                                                              textDecoration: "none",
-                                                              color: "navy"
-                                                          }}>Hi, {sessionStorage.getItem("USERNAME")}</Link>
-                                                </li>
-                                                <li style={{marginLeft: "10px"}}>
-                                                    <Link style={{textDecoration: "none", color: "navy"}}
-                                                          onClick={() => logout()}>
-                                                        Log out
-                                                    </Link>
-                                                </li>
-                                            </>
-                                        )}
+                                    </li>
 
-                                        {sessionStorage.getItem("roles") === "USER" && (
-                                            <>
-                                                <li>
-                                                    <a style={{textDecoration: "none"}} href="/">Home</a>
-                                                </li>
-                                                <li>
-                                                    <a style={{textDecoration: "none"}} href="/shop">shop</a>
-                                                </li>
-                                                <li>
-                                                    <a style={{textDecoration: "none"}} href="/about">about</a>
-                                                </li>
-                                                <li>
-                                                    <a style={{textDecoration: "none"}} href="/cart/2">Cart</a>
-                                                </li>
-                                                <li>
-                                                    <Link to="/profile"
-                                                          style={{
-                                                              textDecoration: "none",
-                                                              color: "navy"
-                                                          }}>Hi, {sessionStorage.getItem("USERNAME")}</Link>
-                                                </li>
-                                                <li style={{marginLeft: "10px"}}>
-                                                    <Link style={{textDecoration: "none", color: "navy"}}
-                                                          onClick={() => logout()}>
-                                                        Log out
-                                                    </Link>
-                                                </li>
+                                    <NavLink to={`/cart/${username}`}>
+                                        <li className="nav-item cta cta-colored">
+
+                                            <a className="nav-link" style={{marginTop: 10}}>
+                                                <span className="icon-shopping_cart"/>
+                                                [{iconQuantity}]
+                                            </a>
 
 
-                                            </>
-                                        )}
+                                        </li>
+                                    </NavLink>
 
-                                        {!sessionStorage.getItem("TOKEN") && (
-                                            <>
 
-                                                <div className="header-right main-menu d-none d-lg-block">
-                                                    <ul>
-                                                        <li>
-                                                            <a style={{textDecoration: "none"}} href="/">Home</a>
-                                                        </li>
-                                                        <li>
-                                                            <a style={{textDecoration: "none"}} href="/shop">Shop</a>
-                                                        </li>
-                                                        <li>
-                                                            <a style={{textDecoration: "none"}} href="/about">About</a>
-                                                        </li>
-                                                        {isMenuOpen ? ( /* Kiểm tra trạng thái đăng nhập và ẩn/hiển thị phần tử tương ứng */
-                                                            <>
-                                                                <li style={{display: "none"}}>
-                                                                    <a style={{textDecoration: "none"}}
-                                                                       href="/login">Login</a>
-                                                                </li>
-                                                                <li>
-                                                                    <Link to="/profile" style={{
-                                                                        textDecoration: "none",
-                                                                        color: "navy"
-                                                                    }}>Hi, {sessionStorage.getItem("USERNAME")}</Link>
-                                                                </li>
-                                                                <li style={{marginLeft: "10px"}}>
-                                                                    <Link
-                                                                        style={{textDecoration: "none", color: "navy"}}
-                                                                        onClick={() => logout()}>Log out</Link>
-                                                                </li>
-                                                            </>
-                                                        ) : (
-                                                            <li>
-                                                                <a style={{textDecoration: "none", color: "navy"}}
-                                                                   href="/login">Login</a>
-                                                            </li>
-                                                        )}
-                                                    </ul>
-                                                </div>
-                                            </>
-                                        )}
-                                    </ul>
-                                </nav>
+                                    <li className="nav-item">
+                                        <a className="nav-link"
+                                           style={{color: "red"}}>{sessionStorage.getItem("USERNAME")}</a>
+                                    </li>
+                                    <li className="nav-item">
+                                        <Link className="nav-link" style={{color: "red"}} onClick={() => logout()}>Log
+                                            out</Link>
+                                    </li>
+
+
+                                </ul>
                             </div>
                         </div>
-                    </div>
-                </div>
+
+                    </nav>
+
+                </>
+            )
+            }
+
+            {
+                sessionStorage.getItem("roles") === "USER" && (
+                    <>
+
+                        <nav
+                            className="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light"
+                            id="ftco-navbar" style={{height: "10%"}}
+                        >
+                            <div className="container" style={{marginTop: -13, marginRight: "22%"}}>
+                                <a className="navbar-brand" href="/">
+                                    HypeSneaker
+                                </a>
+                                <button
+                                    className="navbar-toggler"
+                                    type="button"
+                                    data-toggle="collapse"
+                                    data-target="#ftco-nav"
+                                    aria-controls="ftco-nav"
+                                    aria-expanded="false"
+                                    aria-label="Toggle navigation"
+                                >
+                                    <span className="oi oi-menu"/> Menu
+                                </button>
+                                <div className="collapse navbar-collapse" id="ftco-nav"
+                                     style={{marginLeft: "38%", marginRight: "-29%"}}>
+                                    <ul className="navbar-nav ml-auto">
+                                        <li className="nav-item active">
+                                            <a href="/" className="nav-link">
+                                                Home
+                                            </a>
+                                        </li>
+                                        <li className="nav-item dropdown">
+                                            <a
+                                                className="nav-link "
+                                                href="/shop"
+                                            >
+                                                Shop
+                                            </a>
+
+                                        </li>
+                                        <li className="nav-item">
+                                            <a href="about.html" className="nav-link">
+                                                About
+                                            </a>
+                                        </li>
+
+                                        <NavLink to={`/cart/${username}`}>
+                                            <li className="nav-item cta cta-colored">
+
+                                                <a className="nav-link">
+                                                    <span className="icon-shopping_cart"/>
+                                                    [{iconQuantity}]
+                                                </a>
+
+
+                                            </li>
+                                        </NavLink>
+
+                                        <li className="nav-item">
+                                            <a className="nav-link"
+                                               style={{color: "red"}}>{sessionStorage.getItem("USERNAME")}</a>
+                                        </li>
+                                        <li className="nav-item">
+                                            <Link className="nav-link" style={{color: "red"}} onClick={() => logout()}>Log
+                                                out</Link>
+                                        </li>
+
+
+                                    </ul>
+                                </div>
+                            </div>
+
+                        </nav>
+
+                    </>
+                )
+            }
+            {
+                !sessionStorage.getItem("TOKEN") && (
+                    <>
+                        <nav
+                            className="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light"
+                            id="ftco-navbar" style={{height: "10%"}}
+                        >
+                            <div className="container" style={{marginTop: -13, marginRight: "22%"}}>
+                                <a className="navbar-brand" href="/">
+                                    HypeSneaker
+                                </a>
+                                <button
+                                    className="navbar-toggler"
+                                    type="button"
+                                    data-toggle="collapse"
+                                    data-target="#ftco-nav"
+                                    aria-controls="ftco-nav"
+                                    aria-expanded="false"
+                                    aria-label="Toggle navigation"
+                                >
+                                    <span className="oi oi-menu"/> Menu
+                                </button>
+                                <div className="collapse navbar-collapse" id="ftco-nav"
+                                     style={{marginLeft: "38%", marginRight: "-29%"}}>
+                                    <ul className="navbar-nav ml-auto">
+                                        <li className="nav-item active">
+                                            <a href="/" className="nav-link">
+                                                Home
+                                            </a>
+                                        </li>
+                                        <li className="nav-item dropdown">
+                                            <a
+                                                className="nav-link "
+                                                href="/shop"
+                                            >
+                                                Shop
+                                            </a>
+
+                                        </li>
+                                        <li className="nav-item">
+                                            <a href="about.html" className="nav-link">
+                                                About
+                                            </a>
+                                        </li>
+
+                                        <li style={{width: 84}} className="nav-item">
+                                            <a style={{marginTop: "-4%"}} href="/login" className="nav-link">
+                                                <img style={{width: 25}}
+                                                     src="https://o.remove.bg/downloads/d2a5ba1a-0ee9-4835-a574-d2c5d67d8c73/avatar-removebg-preview.png"></img>
+                                            </a>
+                                        </li>
+
+                                    </ul>
+                                </div>
+                            </div>
+
+                        </nav>
+                    </>
+                )
+            }
+
+            <div className="menu-toggle" onClick={toggleMenu}>
+                <div className="bar"></div>
+                <div className="bar"></div>
+                <div className="bar"></div>
             </div>
+
         </header>
     );
 };

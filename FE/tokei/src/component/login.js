@@ -4,9 +4,6 @@ import {getEmail, postLogin} from "../service/Service";
 import * as Yup from "yup";
 import {useNavigate} from "react-router-dom";
 import React, {useState} from "react";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faEye, faEyeSlash} from "@fortawesome/free-solid-svg-icons";
-import Swal from "sweetalert2";
 
 import 'react-toastify/dist/ReactToastify.css';
 

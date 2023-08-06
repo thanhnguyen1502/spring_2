@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {findProduct} from "../service/ProductService";
+import {findAllProduct} from "../service/ProductService";
 
 function Home() {
     const [product, setProduct] = useState([]);
@@ -7,7 +7,7 @@ function Home() {
     const [itemsPerLoad, setItemsPerLoad] = useState(6);
     useEffect(() => {
         const getProduct = async () => {
-            const productList = await findProduct();
+            const productList = await findAllProduct();
             setProduct(productList)
         };
         getProduct();

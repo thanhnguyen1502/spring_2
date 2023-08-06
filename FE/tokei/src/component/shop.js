@@ -1,35 +1,78 @@
-import React, {useEffect, useState} from 'react';
-import {
-    addToCart,
-    findProduct,
-    findProductType,
-    getAllCartDetail,
-    getAllProductByType
+import React, {useContext, useEffect, useState} from 'react';
+import { findAllProduct, findProductType, getAllProductByType
 } from "../service/ProductService";
-import {Link, NavLink, useNavigate} from "react-router-dom";
+import {NavLink} from "react-router-dom";
 import "../css/shop.css";
 import Swal from "sweetalert2";
+import axios from "axios";
+import {findUserName} from "../service/UserService";
+import {QuantityContext} from "./QuantityContext";
 
 function Shop() {
-    const [product, setProduct] = useState([]);
-    const [productType, setProductType] = useState([]);
-    const [itemsToShow, setItemsToShow] = useState(6);
-    const [itemsPerLoad, setItemsPerLoad] = useState(6);
+    const [items, setItems] = useState([]);
+    const [cart, setCart] = useState([]);
     const [cartItems, setCartItems] = useState([]);
-    const [productId, setProductId] = useState(0);
-    const [userId, setUserId] = useState(1);
-    const [username, setUsername] = useState('');
-    const [count, setCount] = useState(0);
+    const [productType, setProductType] = useState([])
+    const [product, setProduct] = useState([]);
+    const [itemsToShow, setItemsToShow] = useState(9); // Số sản phẩm hiển thị ban đầu
+    const [itemsPerLoad, setItemsPerLoad] = useState(3);
+    const {iconQuantity, setIconQuantity} = useContext(QuantityContext)
+
+    const displayListProduct = async () => {
+        const res = await findAllProduct();
+        setProduct(res);
+    };
 
 
-    const history = useNavigate();
+    const [userId, setUserId] = useState(0);
+    const username = sessionStorage.getItem('USERNAME');
+    const [productId, setProductId] = useState(1);
+    const [amount, setAmount] = useState(1);
+
+
     useEffect(() => {
-        const getProduct = async () => {
-            const productList = await findProduct();
-            setProduct(productList)
-        };
-        getProduct();
+        const getUserName = async () => {
+            const rs = await findUserName(username);
+            console.log(rs);
+            setUserId(rs)
+        }
+        getUserName();
     }, []);
+
+
+    const addToCart = (productId, item) => {
+        const apiUrl = `http://localhost:8080/api/cart/addToCart/${userId}/${productId}/${amount}`;
+
+        setIconQuantity(iconQuantity + 1)
+        Swal.fire({
+            icon: 'success',
+            title: 'Đã thêm vào giỏ hàng',
+            showConfirmButton: false,
+            timer: 1000
+        });
+
+
+        axios.get(apiUrl)
+            .then(response => {
+                Swal.fire({
+                    title: 'Thông báo',
+                    text: 'Thêm thành công sản phẩm vào giỏ hàng!',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                })
+                console.log('Item added to cart:', response.data);
+            })
+            .catch(error => {
+                console.error('Error adding item to cart:', error.response);
+            });
+    };
+
+
+    console.log(iconQuantity);
+    const handleDisplayByType = async (type) => {
+        const res = await getAllProductByType(type);
+        setProduct(res);
+    };
 
     useEffect(() => {
         const showProductType = async () => {
@@ -40,66 +83,18 @@ function Shop() {
     }, []);
 
     useEffect(() => {
-        console.log('Component mounted');
-        return () => {
-            console.log('Component unmounted');
-        };
+        const showList = async () => {
+            const rs = await findAllProduct();
+            setProduct(rs)
+        }
+        showList()
     }, []);
-
-    const setItemCount = (newCount) => {
-        setCount(newCount);
-    };
-
-    const handleDisplayByType = async (type) => {
-        const res = await getAllProductByType(type);
-        setProduct(res);
-    };
-
     const handleLoadMore = () => {
         setItemsToShow(prevItems => prevItems + itemsPerLoad);
     };
-
-    const handelAddToCart = (userId, productId) => { // Assuming 'userId' is available
-        addToCart(userId, productId, 1)
-            .then(() => {
-                // The item was added to the cart successfully
-                Swal.fire({
-                    title: 'Thông báo!',
-                    text: 'Thêm sản phẩm vào giỏ hàng thành công',
-                    icon: 'success',
-                    confirmButtonText: 'OK',
-                });
-
-                getAllCartDetail(userId)
-                    .then((data) => {
-                        setCount(data.length);
-
-                    })
-                    .catch((error) => {
-                        console.error('Error fetching cart details:', error);
-                    });
-            })
-            .catch((error) => {
-                if (error.status === 404) {
-                    Swal.fire({
-                        title: 'Thông báo!',
-                        text: 'Bạn không thể thêm sản phẩm vào giỏ hàng vì số lượng sản phẩm không còn trong kho.',
-                        icon: 'error',
-                        confirmButtonText: 'OK',
-                    });
-                } else {
-                    Swal.fire({
-                        title: 'Thông báo!',
-                        text: 'Có lỗi xảy ra khi thêm sản phẩm vào giỏ hàng',
-                        icon: 'error',
-                        confirmButtonText: 'OK',
-                    });
-                }
-                console.error('Error adding to cart:', error);
-            });
+    const handleAddToCartClick = (productId) => {
+        addToCart(productId);
     };
-
-
 
     return (
         <>
@@ -142,7 +137,8 @@ function Shop() {
                                                 <img
                                                     src={products.img}
                                                     alt=""/>
-                                                <div className="img-cap" onClick={() => handelAddToCart(products.productId)}>
+                                                <div className="img-cap"
+                                                     onClick={() => handleAddToCartClick(products.productId)}>
                                                     <span>Add to cart</span>
                                                 </div>
                                                 <div className="favorit-items">
