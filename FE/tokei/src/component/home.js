@@ -1,10 +1,20 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {findAllProduct} from "../service/ProductService";
+import Swal from "sweetalert2";
+import axios from "axios";
+import {QuantityContext} from "./QuantityContext";
+import {NavLink, useNavigate} from "react-router-dom";
+import {findUserName} from "../service/UserService";
 
 function Home() {
     const [product, setProduct] = useState([]);
     const [itemsToShow, setItemsToShow] = useState(6);
-    const [itemsPerLoad, setItemsPerLoad] = useState(6);
+    const {iconQuantity, setIconQuantity} = useContext(QuantityContext);
+    const username = sessionStorage.getItem('USERNAME');
+    let navigate = useNavigate();
+    const [userId, setUserId] = useState(0);
+    const [amount, setAmount] = useState(1);
+
     useEffect(() => {
         const getProduct = async () => {
             const productList = await findAllProduct();
@@ -13,30 +23,63 @@ function Home() {
         getProduct();
     }, []);
 
+    useEffect(() => {
+        const getUserName = async () => {
+            const rs = await findUserName(username);
+            console.log(rs);
+            setUserId(rs)
+        }
+        getUserName();
+    }, []);
+
+    const addToCart = (productId, item) => {
+        if (!username) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Log in to see your Cart',
+                showConfirmButton: false,
+                timer: 1500
+            });
+            navigate('/login')
+        } else {
+            const apiUrl = `http://localhost:8080/v2/cart/addToCart/${userId}/${productId}/${amount}`;
+            setIconQuantity(iconQuantity + 1);
+            const config = {
+                headers: {
+                    'Authorization': 'Bearer ' + sessionStorage.getItem("TOKEN"),
+                },
+            };
+            axios.get(apiUrl, config)
+                .then(response => {
+                    Swal.fire({
+                        title: 'Notification',
+                        text: 'Add to cart successfully!',
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    });
+                })
+                .catch(error => {
+                    console.error('Error adding item to cart:', error.response);
+                });
+        }
+        ;
+    }
+    console.log(iconQuantity);
+
+    const handleAddToCartClick = (productId) => {
+        addToCart(productId);
+    };
+
     const handleLoadMore = () => {
-        setItemsToShow(prevItems => prevItems + itemsPerLoad);
+        setItemsToShow(prevItems => prevItems);
     };
     console.log(product)
     return (
         <>
             <>
 
-                <div id="preloader-active">
-                    <div className="preloader d-flex align-items-center justify-content-center mt-3">
-                        <div className="preloader-inner position-relative">
-                            <div className="preloader-circle"/>
-                            <div className="preloader-img pere-text">
-                                <img
-                                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTGYbuwWQP2H-EAyPOw-U_qJBFDLLtDjrUDpg&usqp=CAU"
-                                    alt=""/>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
                 <main>
                     <div>
-
                     </div>
                     <div id="carouselExampleControls" className="carousel slide" data-bs-ride="carousel">
                         <div className="carousel-inner">
@@ -70,66 +113,9 @@ function Home() {
                         </button>
                     </div>
 
-                    <section className="new-product-area section-padding30">
-                        <div className="container">
-                            <div className="row">
-                                <div className="col-xl-12">
-                                    <div className="section-tittle mb-70">
-                                        <h2>New Arrivals</h2>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="row">
-                                <div className="col-xl-4 col-lg-4 col-md-6 col-sm-6">
-                                    <div className="single-new-pro mb-30 text-center">
-                                        <div className="product-img">
-                                            <img
-                                                    src="https://themewagon.github.io/timezone/assets/img/gallery/new_product1.png"
-                                                alt=""/>
-                                        </div>
-                                        <div className="product-caption">
-                                            <h3>
-                                                <a style={{textDecoration: "none"}}  href="">Thermo Ball Etip Gloves</a>
-                                            </h3>
-                                            <span>45,743,000 VND</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="col-xl-4 col-lg-4 col-md-6 col-sm-6">
-                                    <div className="single-new-pro mb-30 text-center">
-                                        <div className="product-img">
-                                            <img
-                                                src="https://themewagon.github.io/timezone/assets/img/gallery/new_product2.png"
-                                                alt=""/>
-                                        </div>
-                                        <div className="product-caption">
-                                            <h3>
-                                                <a style={{textDecoration: "none"}}  href="">Thermo Ball Etip Gloves</a>
-                                            </h3>
-                                            <span>45,743,000 VND</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="col-xl-4 col-lg-4 col-md-6 col-sm-6">
-                                    <div className="single-new-pro mb-30 text-center">
-                                        <div className="product-img">
-                                            <img
-                                                src="https://themewagon.github.io/timezone/assets/img/gallery/new_product3.png"
-                                                alt=""/>
-                                        </div>
-                                        <div className="product-caption">
-                                            <h3>
-                                                <a style={{textDecoration: "none"}}  href="">Thermo Ball Etip Gloves</a>
-                                            </h3>
-                                            <span>45,743,000 VND</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
 
-                    <div className="popular-items">
+
+                    <div className="popular-items mt-5">
                         <div className="container">
                             {/* Section tittle */}
                             <div className="row justify-content-center">
@@ -152,7 +138,8 @@ function Home() {
                                                 <img
                                                     src={products.img}
                                                     alt=""/>
-                                                <div className="img-cap">
+                                                <div className="img-cap"
+                                                     onClick={() => handleAddToCartClick(products.productId)}>
                                                     <span>Add to cart</span>
                                                 </div>
                                                 <div className="favorit-items">
@@ -161,22 +148,15 @@ function Home() {
                                             </div>
                                             <div className="popular-caption">
                                                 <h3>
-                                                    <a style={{textDecoration: "none", fontSize: '20px'}}
-                                                       href="">{products.productName}</a>
+                                                    <NavLink to={`/detail/${products.productId}`}
+                                                             style={{textDecoration: "none", fontSize: '20px'}}
+                                                    >{products.productName}</NavLink>
                                                 </h3>
                                                 <span>{new Intl.NumberFormat().format(products.price)} VND</span>
                                             </div>
                                         </div>
                                     </div>
                                 ))}
-                                {itemsToShow < product.length && (
-                                    <div className="text-center mt-3">
-                                        <button style={{width: 100, marginBottom:"20px"}} className="btn btn-outline-dark"
-                                                onClick={handleLoadMore}>
-                                            See <ion-icon name="chevron-down-outline"></ion-icon>
-                                        </button>
-                                    </div>
-                                )}
                             </div>
                         </div>
                     </div>

@@ -2,9 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { findAllHistory } from "../service/CartService";
 import { useParams } from "react-router";
 import {findUserName} from "../service/UserService";
+import Swal from "sweetalert2";
+import {useNavigate} from "react-router-dom";
 
 
 function History() {
+    const navigate = useNavigate();
     const [userId, setUserId] = useState(0);
     const username = sessionStorage.getItem('USERNAME');
     const [history, setHistory] = useState([]);
@@ -34,11 +37,28 @@ function History() {
         getHistory();
     }, [userId]);
 
+
     return (
         <>
-            <div>
-                <h1 className="text-center mt-5">Order History</h1>
+            <div
+                className="hero-wrap hero-bread"
+                style={{backgroundImage: 'url("https://www.adorama.com/alc/wp-content/uploads/2017/11/shutterstock_114802408.jpg")'}}
+            >
+                <div className="container">
+                    <div className="row no-gutters slider-text align-items-center justify-content-center">
+                        <div className="col-md-9  text-center">
+                            <p className="breadcrumbs">
+                                <span className="mr-2">
+                                    <a href="/">Home</a>
+                                </span>{" "}
+                                <span>Cart</span>
+                            </p>
+                            <h1 className="mb-0 bread">Order History</h1>
+                        </div>
+                    </div>
+                </div>
             </div>
+
             <div className="row mt-5">
                 <div className="col-1"></div>
                 <div className="col-10">
@@ -59,7 +79,7 @@ function History() {
                                 <td>{order.codeBill}</td>
                                 <td>{order.user.name}</td>
                                 <td>{order.orderDate}</td>
-                                <td>{order.total}</td>
+                                <td> {new Intl.NumberFormat().format(order.total)} VND</td>
                             </tr>
                         ))}
                         </tbody>

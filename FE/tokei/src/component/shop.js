@@ -1,32 +1,26 @@
 import React, {useContext, useEffect, useState} from 'react';
-import { findAllProduct, findProductType, getAllProductByType
+import {
+    findAllProduct, findProductType, getAllProductByType, searchByName
 } from "../service/ProductService";
-import {NavLink} from "react-router-dom";
+import {NavLink, useNavigate} from "react-router-dom";
 import "../css/shop.css";
 import Swal from "sweetalert2";
 import axios from "axios";
 import {findUserName} from "../service/UserService";
 import {QuantityContext} from "./QuantityContext";
+import {Field, Form, Formik} from "formik";
+import "../css/search.css";
 
 function Shop() {
-    const [items, setItems] = useState([]);
-    const [cart, setCart] = useState([]);
-    const [cartItems, setCartItems] = useState([]);
     const [productType, setProductType] = useState([])
     const [product, setProduct] = useState([]);
-    const [itemsToShow, setItemsToShow] = useState(9); // Số sản phẩm hiển thị ban đầu
+    const [itemsToShow, setItemsToShow] = useState(6);
     const [itemsPerLoad, setItemsPerLoad] = useState(3);
     const {iconQuantity, setIconQuantity} = useContext(QuantityContext)
-
-    const displayListProduct = async () => {
-        const res = await findAllProduct();
-        setProduct(res);
-    };
-
+    let navigate = useNavigate();
 
     const [userId, setUserId] = useState(0);
     const username = sessionStorage.getItem('USERNAME');
-    const [productId, setProductId] = useState(1);
     const [amount, setAmount] = useState(1);
 
 
@@ -39,41 +33,43 @@ function Shop() {
         getUserName();
     }, []);
 
-
     const addToCart = (productId, item) => {
-        const apiUrl = `http://localhost:8080/api/cart/addToCart/${userId}/${productId}/${amount}`;
-
-        setIconQuantity(iconQuantity + 1)
-        Swal.fire({
-            icon: 'success',
-            title: 'Đã thêm vào giỏ hàng',
-            showConfirmButton: false,
-            timer: 1000
-        });
-
-
-        axios.get(apiUrl)
-            .then(response => {
-                Swal.fire({
-                    title: 'Thông báo',
-                    text: 'Thêm thành công sản phẩm vào giỏ hàng!',
-                    icon: 'success',
-                    confirmButtonText: 'OK'
-                })
-                console.log('Item added to cart:', response.data);
-            })
-            .catch(error => {
-                console.error('Error adding item to cart:', error.response);
+        if (!username) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Log in to see your Cart',
+                showConfirmButton: false,
+                timer: 1500
             });
-    };
-
-
+            navigate('/login')
+        } else {
+            const apiUrl = `http://localhost:8080/v2/cart/addToCart/${userId}/${productId}/${amount}`;
+            setIconQuantity(iconQuantity + 1);
+            const config = {
+                headers: {
+                    'Authorization': 'Bearer ' + sessionStorage.getItem("TOKEN"),
+                },
+            };
+            axios.get(apiUrl, config)
+                .then(response => {
+                    Swal.fire({
+                        title: 'Notification',
+                        text: 'Add to cart successfully!',
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    });
+                })
+                .catch(error => {
+                    console.error('Error adding item to cart:', error.response);
+                });
+        }
+        ;
+    }
     console.log(iconQuantity);
     const handleDisplayByType = async (type) => {
         const res = await getAllProductByType(type);
         setProduct(res);
     };
-
     useEffect(() => {
         const showProductType = async () => {
             const rs = await findProductType();
@@ -82,11 +78,12 @@ function Shop() {
         showProductType()
     }, []);
 
+    const showList = async () => {
+        const rs = await findAllProduct();
+        setProduct(rs)
+    }
+
     useEffect(() => {
-        const showList = async () => {
-            const rs = await findAllProduct();
-            setProduct(rs)
-        }
         showList()
     }, []);
     const handleLoadMore = () => {
@@ -99,6 +96,26 @@ function Shop() {
     return (
         <>
             <main>
+                <div
+                    className="hero-wrap hero-bread"
+                    style={{backgroundImage: 'url("https://www.adorama.com/alc/wp-content/uploads/2017/11/shutterstock_114802408.jpg")'}}
+                >
+                    <div className="container">
+                        <div className="row no-gutters slider-text align-items-center justify-content-center">
+                            <div className="col-md-9  text-center">
+                                <p className="breadcrumbs">
+                                <span className="mr-2">
+                                    <a href="/">Home</a>
+                                </span>{" "}
+                                    <span>Cart</span>
+                                </p>
+                                <h1 className="mb-0 bread">My Shop</h1>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
                 <div className="container">
                     <div className="tab-content" id="nav-tabContent">
                         <div className="popular-items">
@@ -116,9 +133,9 @@ function Shop() {
                                     </div>
                                 </div>
                             </div>
-                            <div className="row">
+                            <div className="row mt-4">
                                 <div className="button-container">
-                                    {productType.map((value, index) => {
+                                    {productType?.map((value, index) => {
                                         return (
                                             <div key={index} className="m-3">
                                                 <button className="btn btn-outline-secondary"
@@ -129,6 +146,34 @@ function Shop() {
                                             </div>
                                         );
                                     })}
+                                    <div className="m-5"></div>
+                                    <div className="m-3">
+                                        <div className="btn btn-outline-secondary">
+                                            <Formik initialValues={{productName: ''}}
+                                                    onSubmit={async (values) => {
+                                                        if (!values.productName) {
+                                                            showList();
+                                                        } else {
+                                                            const res = await searchByName(values.productName);
+                                                            setProduct(res);
+                                                        }
+                                                    }}
+                                            >
+                                                <Form action="" id="search-box" style={{marginTop: -17, marginLeft: "-6%"}}>
+                                                    <Field
+                                                        id="search-text"
+                                                        type="text"
+                                                        name="productName"
+                                                        placeholder="Search here..."
+                                                    />
+                                                    <button id="search-btn" type='submit'>
+                                                        <i className="fa-solid fa-magnifying-glass"></i>
+                                                    </button>
+                                                </Form>
+                                            </Formik>
+                                        </div>
+
+                                    </div>
                                 </div>
                                 {product?.slice(0, itemsToShow)?.map((products, index) => (
                                     <div className="col-xl-4 col-lg-4 col-md-6 col-sm-6" key={index}>
@@ -156,6 +201,13 @@ function Shop() {
                                         </div>
                                     </div>
                                 ))}
+                                {product?.length === 0 && (
+                                    <tr className="text-center">
+                                        <img
+                                            src="https://www.groceryonmobile.com/static/media/product-not-found.f96eec329d0cf1188bbb.jpg"
+                                            alt=""/>
+                                    </tr>
+                                )}
                             </div>
                         </div>
                         {itemsToShow < product.length && (
@@ -169,7 +221,8 @@ function Shop() {
                 </div>
             </main>
         </>
-    );
+    )
+        ;
 }
 
 export default Shop;

@@ -1,22 +1,86 @@
-import React, {useEffect, useState} from 'react';
-import {findById, findProductById} from "../service/ProductService";
+import React, {useContext, useEffect, useState} from 'react';
+import {findAllProduct, findProductById} from "../service/ProductService";
 import {useParams} from "react-router";
+import {NavLink, useNavigate} from "react-router-dom";
+import Swal from "sweetalert2";
+import axios from "axios";
+import {QuantityContext} from "./QuantityContext";
+import {findUserName} from "../service/UserService";
 
 
 function Detail() {
-    const [product, setProduct] = useState({})
+    const [productDetail, setproductDetail] = useState([]);
+    const [product, setProduct] = useState([])
+    const {iconQuantity, setIconQuantity} = useContext(QuantityContext);
+    const username = sessionStorage.getItem('USERNAME');
+    let navigate = useNavigate();
+    const [userId, setUserId] = useState(0);
+    const [amount, setAmount] = useState(1);
     const param = useParams()
-
-
-    console.log(product);
+    const [itemsToShow, setItemsToShow] = useState(6);
 
     useEffect(() => {
         const fetchApi = async () => {
             const result1 = await findProductById(param.id)
-            setProduct(result1)
+            setproductDetail(result1)
         }
         fetchApi()
     }, [param.id])
+
+    useEffect(() => {
+        const getUserName = async () => {
+            const rs = await findUserName(username);
+            console.log(rs);
+            setUserId(rs)
+        }
+        getUserName();
+    }, []);
+
+    useEffect(() => {
+        const getProduct = async () => {
+            const productList = await findAllProduct();
+            setProduct(productList)
+        };
+        getProduct();
+    }, []);
+
+    const handleAddToCartClick = (productId) => {
+        addToCart(productId);
+    };
+    const addToCart = (productId, item) => {
+        if (!username) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Log in to see your Cart',
+                showConfirmButton: false,
+                timer: 1500
+            });
+            navigate('/login')
+        } else {
+            const apiUrl = `http://localhost:8080/v2/cart/addToCart/${userId}/${productId}/${amount}`;
+            setIconQuantity(iconQuantity + 1);
+            const config = {
+                headers: {
+                    'Authorization': 'Bearer ' + sessionStorage.getItem("TOKEN"),
+                },
+            };
+            axios.get(apiUrl, config)
+                .then(response => {
+                    Swal.fire({
+                        title: 'Notification',
+                        text: 'Add to cart successfully!',
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    });
+                })
+                .catch(error => {
+                    console.error('Error adding item to cart:', error.response);
+                });
+        }
+        ;
+    }
+
+
     return (
         <>
             <div
@@ -49,50 +113,50 @@ function Detail() {
                 <div className="container">
                     <div className="row">
                         <div className="col-lg-6 mb-5 mt-5">
-                            <a >
-                                <img style={{ width: "100%" }}
-                                     src={product.img}
+                            <a>
+                                <img style={{width: "100%"}}
+                                     src={productDetail.img}
                                      className="img-fluid"
                                      alt="Colorlib Template"
                                 />
                             </a>
                         </div>
-                        <div className="col-lg-6 product-details pl-md-5 ">
-                            <h3>{product.nameProduct}</h3>
+                        <div className="col-lg-6 productDetail-details pl-md-5 ">
+                            <h3>{productDetail.nameproductDetail}</h3>
                             <div className="rating d-flex">
                                 <p className="text-left mr-4">
                                     <a href="#" className="mr-2 text-decoration-none">
                                         5.0
                                     </a>
                                     <a href="#">
-                                        <span className="ion-ios-star-outline" />
+                                        <span className="ion-ios-star-outline"/>
                                     </a>
                                     <a href="#">
-                                        <span className="ion-ios-star-outline" />
+                                        <span className="ion-ios-star-outline"/>
                                     </a>
                                     <a href="#">
-                                        <span className="ion-ios-star-outline" />
+                                        <span className="ion-ios-star-outline"/>
                                     </a>
                                     <a href="#">
-                                        <span className="ion-ios-star-outline" />
+                                        <span className="ion-ios-star-outline"/>
                                     </a>
                                     <a href="#">
-                                        <span className="ion-ios-star-outline" />
+                                        <span className="ion-ios-star-outline"/>
                                     </a>
                                 </p>
                                 <p className="text-left mr-4">
-                                    <a href="#" className="mr-2 text-decoration-none" style={{ color: "#000" }}>
-                                        100 <span style={{ color: "#bbb"}}>Rating</span>
+                                    <a href="#" className="mr-2 text-decoration-none" style={{color: "#000"}}>
+                                        100 <span style={{color: "#bbb"}}>Rating</span>
                                     </a>
                                 </p>
                                 <p className="text-left">
-                                    <a href="#" className="mr-2 text-decoration-none" style={{ color: "#000" }}>
-                                        500 <span style={{ color: "#bbb" }}>Sold</span>
+                                    <a href="#" className="mr-2 text-decoration-none" style={{color: "#000"}}>
+                                        500 <span style={{color: "#bbb"}}>Sold</span>
                                     </a>
                                 </p>
                             </div>
                             <p className="price">
-                                <span>đ {new Intl.NumberFormat().format(product.price)}</span>
+                                <span>đ {new Intl.NumberFormat().format(productDetail.price)}</span>
                             </p>
                             <p>
                                 A small river named Duden flows by their place and supplies it with
@@ -114,7 +178,7 @@ function Detail() {
                                     <div className="form-group d-flex">
                                         <div className="select-wrap">
                                             <div className="icon">
-                                                <span className="ion-ios-arrow-down" />
+                                                <span className="ion-ios-arrow-down"/>
                                             </div>
                                             <select name="" id="" className="form-control">
                                                 <option value="">Small</option>
@@ -125,7 +189,7 @@ function Detail() {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="w-100" />
+                                <div className="w-100"/>
                                 <div className="input-group col-md-6 d-flex mb-3">
                                     <span className="input-group-btn mr-2">
                                         <button
@@ -134,7 +198,7 @@ function Detail() {
                                             data-type="minus"
                                             data-field=""
                                         >
-                                            <i className="ion-ios-remove" />
+                                            <i className="ion-ios-remove"/>
                                         </button>
                                     </span>
                                     <input
@@ -153,23 +217,21 @@ function Detail() {
                                             data-type="plus"
                                             data-field=""
                                         >
-                                            <i className="ion-ios-add" />
+                                            <i className="ion-ios-add"/>
                                         </button>
                                     </span>
                                 </div>
-                                <div className="w-100" />
+                                <div className="w-100"/>
                                 <div className="col-md-12">
-                                    <p style={{ color: "#000" }}>80 piece available</p>
+                                    <p style={{color: "#000"}}>80 piece available</p>
                                 </div>
                             </div>
-                            <p>
-                                <a href="cart.html" className="btn btn-black py-3 px-5 mr-2">
-                                    Add to Cart
-                                </a>
-                                <a href="cart.html" className="btn btn-primary py-3 px-5">
-                                    Buy now
-                                </a>
-                            </p>
+                            <div className="btn btn-black py-3 px-5 mr-2"
+                                 onClick={() => handleAddToCartClick(productDetail.productId)}>
+                                Add to Cart
+                            </div>
+
+
                         </div>
                     </div>
                     <div className="row mt-5">
@@ -224,7 +286,7 @@ function Detail() {
                                     aria-labelledby="day-1-tab"
                                 >
                                     <div className="p-4">
-                                        <h3 className="mb-4">{product.productName}</h3>
+                                        <h3 className="mb-4">{productDetail.productDetailName}</h3>
                                         <p>
                                             On her way she met a copy. The copy warned the Little Blind
                                             Text, that where it came from it would have been rewritten a
@@ -245,7 +307,7 @@ function Detail() {
                                     aria-labelledby="v-pills-day-2-tab"
                                 >
                                     <div className="p-4">
-                                        <h3 className="mb-4">{product.nameProduct}</h3>
+                                        <h3 className="mb-4">{productDetail.nameproductDetail}</h3>
                                         <p>
                                             On her way she met a copy. The copy warned the Little Blind
                                             Text, that where it came from it would have been rewritten a
@@ -271,7 +333,7 @@ function Detail() {
                                             <div className="review">
                                                 <div
                                                     className="user-img"
-                                                    style={{ backgroundImage: "url(images/person_1.jpg)" }}
+                                                    style={{backgroundImage: "url(images/person_1.jpg)"}}
                                                 />
                                                 <div className="desc">
                                                     <h4>
@@ -280,15 +342,15 @@ function Detail() {
                                                     </h4>
                                                     <p className="star">
                                                         <span>
-                                                            <i className="ion-ios-star-outline" />
-                                                            <i className="ion-ios-star-outline" />
-                                                            <i className="ion-ios-star-outline" />
-                                                            <i className="ion-ios-star-outline" />
-                                                            <i className="ion-ios-star-outline" />
+                                                            <i className="ion-ios-star-outline"/>
+                                                            <i className="ion-ios-star-outline"/>
+                                                            <i className="ion-ios-star-outline"/>
+                                                            <i className="ion-ios-star-outline"/>
+                                                            <i className="ion-ios-star-outline"/>
                                                         </span>
                                                         <span className="text-right">
                                                             <a href="#" className="reply">
-                                                                <i className="icon-reply" />
+                                                                <i className="icon-reply"/>
                                                             </a>
                                                         </span>
                                                     </p>
@@ -302,7 +364,7 @@ function Detail() {
                                             <div className="review">
                                                 <div
                                                     className="user-img"
-                                                    style={{ backgroundImage: "url(images/person_2.jpg)" }}
+                                                    style={{backgroundImage: "url(images/person_2.jpg)"}}
                                                 />
                                                 <div className="desc">
                                                     <h4>
@@ -311,15 +373,15 @@ function Detail() {
                                                     </h4>
                                                     <p className="star">
                                                         <span>
-                                                            <i className="ion-ios-star-outline" />
-                                                            <i className="ion-ios-star-outline" />
-                                                            <i className="ion-ios-star-outline" />
-                                                            <i className="ion-ios-star-outline" />
-                                                            <i className="ion-ios-star-outline" />
+                                                            <i className="ion-ios-star-outline"/>
+                                                            <i className="ion-ios-star-outline"/>
+                                                            <i className="ion-ios-star-outline"/>
+                                                            <i className="ion-ios-star-outline"/>
+                                                            <i className="ion-ios-star-outline"/>
                                                         </span>
                                                         <span className="text-right">
                                                             <a href="#" className="reply">
-                                                                <i className="icon-reply" />
+                                                                <i className="icon-reply"/>
                                                             </a>
                                                         </span>
                                                     </p>
@@ -333,7 +395,7 @@ function Detail() {
                                             <div className="review">
                                                 <div
                                                     className="user-img"
-                                                    style={{ backgroundImage: "url(images/person_3.jpg)" }}
+                                                    style={{backgroundImage: "url(images/person_3.jpg)"}}
                                                 />
                                                 <div className="desc">
                                                     <h4>
@@ -342,15 +404,15 @@ function Detail() {
                                                     </h4>
                                                     <p className="star">
                                                         <span>
-                                                            <i className="ion-ios-star-outline" />
-                                                            <i className="ion-ios-star-outline" />
-                                                            <i className="ion-ios-star-outline" />
-                                                            <i className="ion-ios-star-outline" />
-                                                            <i className="ion-ios-star-outline" />
+                                                            <i className="ion-ios-star-outline"/>
+                                                            <i className="ion-ios-star-outline"/>
+                                                            <i className="ion-ios-star-outline"/>
+                                                            <i className="ion-ios-star-outline"/>
+                                                            <i className="ion-ios-star-outline"/>
                                                         </span>
                                                         <span className="text-right">
                                                             <a href="#" className="reply">
-                                                                <i className="icon-reply" />
+                                                                <i className="icon-reply"/>
                                                             </a>
                                                         </span>
                                                     </p>
@@ -367,55 +429,55 @@ function Detail() {
                                                 <h3 className="mb-4">Give a Review</h3>
                                                 <p className="star">
                                                     <span>
-                                                        <i className="ion-ios-star-outline" />
-                                                        <i className="ion-ios-star-outline" />
-                                                        <i className="ion-ios-star-outline" />
-                                                        <i className="ion-ios-star-outline" />
-                                                        <i className="ion-ios-star-outline" />
+                                                        <i className="ion-ios-star-outline"/>
+                                                        <i className="ion-ios-star-outline"/>
+                                                        <i className="ion-ios-star-outline"/>
+                                                        <i className="ion-ios-star-outline"/>
+                                                        <i className="ion-ios-star-outline"/>
                                                         (98%)
                                                     </span>
                                                     <span>20 Reviews</span>
                                                 </p>
                                                 <p className="star">
                                                     <span>
-                                                        <i className="ion-ios-star-outline" />
-                                                        <i className="ion-ios-star-outline" />
-                                                        <i className="ion-ios-star-outline" />
-                                                        <i className="ion-ios-star-outline" />
-                                                        <i className="ion-ios-star-outline" />
+                                                        <i className="ion-ios-star-outline"/>
+                                                        <i className="ion-ios-star-outline"/>
+                                                        <i className="ion-ios-star-outline"/>
+                                                        <i className="ion-ios-star-outline"/>
+                                                        <i className="ion-ios-star-outline"/>
                                                         (85%)
                                                     </span>
                                                     <span>10 Reviews</span>
                                                 </p>
                                                 <p className="star">
                                                     <span>
-                                                        <i className="ion-ios-star-outline" />
-                                                        <i className="ion-ios-star-outline" />
-                                                        <i className="ion-ios-star-outline" />
-                                                        <i className="ion-ios-star-outline" />
-                                                        <i className="ion-ios-star-outline" />
+                                                        <i className="ion-ios-star-outline"/>
+                                                        <i className="ion-ios-star-outline"/>
+                                                        <i className="ion-ios-star-outline"/>
+                                                        <i className="ion-ios-star-outline"/>
+                                                        <i className="ion-ios-star-outline"/>
                                                         (98%)
                                                     </span>
                                                     <span>5 Reviews</span>
                                                 </p>
                                                 <p className="star">
                                                     <span>
-                                                        <i className="ion-ios-star-outline" />
-                                                        <i className="ion-ios-star-outline" />
-                                                        <i className="ion-ios-star-outline" />
-                                                        <i className="ion-ios-star-outline" />
-                                                        <i className="ion-ios-star-outline" />
+                                                        <i className="ion-ios-star-outline"/>
+                                                        <i className="ion-ios-star-outline"/>
+                                                        <i className="ion-ios-star-outline"/>
+                                                        <i className="ion-ios-star-outline"/>
+                                                        <i className="ion-ios-star-outline"/>
                                                         (98%)
                                                     </span>
                                                     <span>0 Reviews</span>
                                                 </p>
                                                 <p className="star">
                                                     <span>
-                                                        <i className="ion-ios-star-outline" />
-                                                        <i className="ion-ios-star-outline" />
-                                                        <i className="ion-ios-star-outline" />
-                                                        <i className="ion-ios-star-outline" />
-                                                        <i className="ion-ios-star-outline" />
+                                                        <i className="ion-ios-star-outline"/>
+                                                        <i className="ion-ios-star-outline"/>
+                                                        <i className="ion-ios-star-outline"/>
+                                                        <i className="ion-ios-star-outline"/>
+                                                        <i className="ion-ios-star-outline"/>
                                                         (98%)
                                                     </span>
                                                     <span>0 Reviews</span>
@@ -429,6 +491,39 @@ function Detail() {
                     </div>
                 </div>
             </section>}
+            <div className="row">
+                {product?.slice(0, itemsToShow)?.map((products, index) => (
+                    <div className="col-xl-4 col-lg-4 col-md-6 col-sm-6" key={index}>
+                        <div className="single-popular-items mb-50 text-center">
+                            <div className="popular-img">
+                                <img
+                                    src={products.img}
+                                    alt=""/>
+                                <div className="favorit-items">
+                                    <span className="flaticon-heart"/>
+                                </div>
+                            </div>
+                            <div className="popular-caption">
+                                <h3>
+                                    {/*<NavLink to={`/detail/${products.productId}`}*/}
+                                    {/*         style={{textDecoration: "none", fontSize: '20px'}}*/}
+                                    {/*>{products.productName}</NavLink>*/}
+
+                                    <NavLink style={{textDecoration: "none", fontSize: '20px'}}
+                                             to={`/detail/${products.productId}`} onClick={window.scrollTo(0, 0)}>
+                                        <a className="img-prod" onClick={() => window.scrollTo(0, 0)}>
+                                            {products.productName}
+                                            <div className="overlay"/>
+                                        </a>
+
+                                    </NavLink>
+                                </h3>
+                                <span>{new Intl.NumberFormat().format(products.price)} VND</span>
+                            </div>
+                        </div>
+                    </div>
+                ))}
+            </div>
         </>
     );
 }
