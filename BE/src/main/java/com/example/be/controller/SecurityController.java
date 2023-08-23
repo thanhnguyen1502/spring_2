@@ -25,8 +25,10 @@ public class SecurityController {
     private JwtUtility jwtUtility;
     @Autowired
     private AuthenticationManager authenticationManager;
+
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@RequestBody @Valid LoginRequest loginRequest) {
+
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword());
 
         Authentication authentication = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
@@ -40,6 +42,7 @@ public class SecurityController {
         List<String> roles = userDetails.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
+
         return ResponseEntity.ok(
                 new JwtResponse(
                         jwt,
@@ -47,4 +50,5 @@ public class SecurityController {
                         roles)
         );
     }
+
 }

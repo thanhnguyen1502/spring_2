@@ -47,8 +47,7 @@ const CartComponent = () => {
                     confirmButtonText: 'OK',
                 });
                 navigate("/login")
-            }
-            else{
+            } else {
                 const rs = await getAllCart(param.username);
 
                 setCart1(rs)
@@ -57,22 +56,10 @@ const CartComponent = () => {
         listCard();
     }, []);
 
-    // const deleteCartDetailService = (cartId, productId, productName, cartDetailId) => {
-    //     deleteCartDetail(cartId, productId).then(() => {
-    //         setCart1((prevCart) => prevCart.filter((item) => item.cartDetailId !== cartDetailId));
-    //         Swal.fire({
-    //             title: 'Thông báo!',
-    //             text: `Bạn vừa xoá mặt hàng ${productName}`,
-    //             icon: 'success',
-    //             confirmButtonText: 'OK',
-    //         });
-    //     });
-    // };
-
-    const deleteCartDetailService = (cartId, productId, productName, cartDetailId, img ) => {
+    const deleteCartDetailService = (cartId, productId, productName, cartDetailId, img) => {
 
         Swal.fire({
-            imageUrl : img,
+            imageUrl: img,
             imageWidth: 400,
             imageHeight: 300,
             text: "Bạn có muốn xóa sản phẩm này không ?",
@@ -80,7 +67,7 @@ const CartComponent = () => {
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
             confirmButtonText: 'Xóa',
-            cancelButtonText : "Không"
+            cancelButtonText: "Không"
         }).then((result) => {
             console.log("result" + result)
             if (result.isConfirmed) {
@@ -104,11 +91,10 @@ const CartComponent = () => {
         let totalSum = 0;
         for (const item of cart) {
             const productQuantity = productQuantities[item.productId] || item.amount;
-            totalSum += item.price * productQuantity;
+            totalSum += item.price * productQuantity + 30000;
         }
         return totalSum;
     };
-
 
     const handleQuantityChange = (productId, newQuantity) => {
         setProductQuantities((prevQuantities) => ({
@@ -133,7 +119,7 @@ const CartComponent = () => {
         <>
             <div
                 className="hero-wrap hero-bread"
-                style={{backgroundImage: 'url("https://www.adorama.com/alc/wp-content/uploads/2017/11/shutterstock_114802408.jpg")'}}
+                style={{backgroundImage: 'url("https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSj9glE3o5bFuG97oV2D56MFCslGcuLGy-RVHcpUtIeiggZwPXL")'}}
             >
                 <div className="container">
                     <div className="row no-gutters slider-text align-items-center justify-content-center">
@@ -178,11 +164,12 @@ const CartComponent = () => {
                                         </tr>
                                         </thead>
                                         <tbody>
+
                                         {cart?.map((item, index) => (
                                             < tr className="text-center" key={index}>
                                                 <td className="product-remove">
                                                     <a href="#"
-                                                       onClick={() => deleteCartDetailService( item.cartId, item.productId, item.productName, item.cartDetailId,item.img)}>
+                                                       onClick={() => deleteCartDetailService(item.cartId, item.productId, item.productName, item.cartDetailId, item.img)}>
                                                         <img width="24" height="24"
                                                              src="https://img.icons8.com/material-sharp/24/delete-sign.png"
                                                              alt="delete-sign"/>
@@ -247,7 +234,7 @@ const CartComponent = () => {
                                                             <p className="d-flex total-price">
                                                                 <span>Total</span>
                                                                 <span
-                                                                    className="text-end">{Intl.NumberFormat().format(calculateTotalSum() + 30000)} VND</span>
+                                                                    className="text-end">{Intl.NumberFormat().format(calculateTotalSum())} VND</span>
                                                             </p>
                                                         </div>
                                                         <PayPalScriptProvider>
@@ -257,7 +244,8 @@ const CartComponent = () => {
                                                                         purchase_units: [
                                                                             {
                                                                                 amount: {
-                                                                                    value: calculateTotalSum(),
+                                                                                    value: (calculateTotalSum() / 24000).toString().slice(0, 4),
+                                                                                    currency_code: 'USD'
                                                                                 },
                                                                             },
                                                                         ],
@@ -271,7 +259,7 @@ const CartComponent = () => {
                                                                             showConfirmButton: false,
                                                                             timer: 1000,
                                                                         });
-                                                                        const totalAmount = calculateTotalSum() + 30000; // Calculate the total amount including shipping
+                                                                        const totalAmount = calculateTotalSum();
                                                                         saveHistory(userId, totalAmount).then(() => {
                                                                             setCart(userId).then((updatedCartData) => {
                                                                                 setCart1(updatedCartData);
@@ -284,11 +272,8 @@ const CartComponent = () => {
                                                         </PayPalScriptProvider>
                                                     </div>
                                                 </div>
-
                                             </td>
                                         </tr>
-
-                                        {/* END TR*/}
                                         </tbody>
                                     </table>
                                 </div>

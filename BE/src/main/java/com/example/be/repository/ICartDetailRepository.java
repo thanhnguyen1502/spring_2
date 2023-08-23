@@ -14,25 +14,24 @@ import java.util.List;
 public interface ICartDetailRepository extends JpaRepository<CartDetail, Integer> {
     @Query(value = "select c.cart_id as cartId, cd.cart_detail_id as cartDetailId, \n" +
             "p.product_name as productName, p.product_id as productId,\n" +
-            "p.price as price, p.img as img, cd.amount as amount, p.amount as amountt, c.user_id as userId \n" +
-            "    from product as p \n"+
+            "p.price as price, p.img as img, cd.amount as amount, p.amount as amountt, u.username as username \n" +
+            "    from product as p \n" +
             "    join cart_detail as cd on cd.product_id = p.product_id \n" +
             "    join cart as c on cd.cart_id = c.cart_id \n" +
-            "    where c.user_id = :userId and cd.delete_status = false order by cd.cart_detail_id desc ", nativeQuery = true)
-    List<ICartDetailDto> findAll(@Param("userId") Integer userId);
+            "    join user as u on u.user_id = c.user_id "+
+            "    where u.username = :username and cd.delete_status = false order by cd.cart_detail_id desc ", nativeQuery = true)
+    List<ICartDetailDto> findAll(@Param("username") String username);
     @Query(value = "select cd.cart_detail_id as cartDetailId from cart_detail cd " +
             "join cart c on cd.cart_id = c.cart_id " +
             "left join purchase_history ph on ph.purchase_history_id = cd.purchase_history_id " +
             "where c.user_id = :userId and cd.delete_status = false and cd.purchase_history_id is null", nativeQuery = true)
     List<Integer> findAllCartDetail(@Param("userId") Integer userId);
-
     @Modifying
     @Query(value = "update cart_detail set amount = :amount where cart_detail_id = :cartDetailId", nativeQuery = true)
     void updateAmount(@Param("amount") Integer amount,
                       @Param("cartDetailId") Integer cartDetailId);
     @Modifying
     void deleteCartDetailByCartCartIdAndProductProductId(Integer cartId, Integer productId);
-
     @Modifying
     @Query(value = "update cart_detail cd \n" +
             "            join cart c on c.cart_id = cd.cart_id \n" +

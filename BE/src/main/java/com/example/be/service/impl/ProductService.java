@@ -33,4 +33,9 @@ public class ProductService implements IProductService {
     public void setAmount(Integer amount, Integer productId) {
         iProductRepository.setAmount(amount, productId);
     }
+
+    @Override
+    public List<Product> searchByName(String searchTerm) {
+        return iProductRepository.findByName(searchTerm);
+    }
 }

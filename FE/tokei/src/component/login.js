@@ -69,25 +69,30 @@ export function Login() {
                                                 window.location.href = '/';
                                             })
                                             .catch(() => {
-                                                setFailedAccount('Tên tài khoản hoặc mật khẩu không đúng');
+                                                setFailedAccount('username or password is incorrect !');
                                             });
                                     }}
                                 >
                                     <Form>
                                         <div className="col-md-12 form-group p_star">
                                             <Field type="text" className="form-control" id="username" name="username" placeholder="Username" />
-                                            <ErrorMessage name="username" className="text-black col-12" component="span" />
+                                            <ErrorMessage name="username" className="text-danger col-12" component="span" />
                                         </div>
                                         <div className="col-md-12 form-group p_star">
                                             <Field type="password" className="form-control" id="password" name="password" placeholder="Password" />
-                                            <ErrorMessage name="password" className="text-black col-12" component="span" />
+                                            <ErrorMessage name="password" className="text-danger col-12" component="span" />
+                                            {failedAccount && (
+                                                <span className="text-danger col-12">{failedAccount}</span>
+                                            )}
                                         </div>
                                         <div className="col-md-12 form-group">
                                             <div className="creat_account d-flex align-items-center">
                                                 <input type="checkbox" id="f-option" name="selector" />
                                                 <label htmlFor="f-option">Remember me</label>
                                             </div>
-                                            <button type="submit" value="submit" className="btn_3">Log in</button>
+                                            <button type="submit" value="submit" className="btn btn-secondary">
+                                                Log in
+                                            </button>
                                             <a className="lost_pass" href="#">Forget password?</a>
                                         </div>
                                     </Form>

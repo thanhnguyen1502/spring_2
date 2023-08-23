@@ -16,7 +16,7 @@ function Shop() {
     const [product, setProduct] = useState([]);
     const [itemsToShow, setItemsToShow] = useState(6);
     const [itemsPerLoad, setItemsPerLoad] = useState(3);
-    const {iconQuantity, setIconQuantity} = useContext(QuantityContext)
+    const {iconQuantity, setIconQuantity} = useContext(QuantityContext);
     let navigate = useNavigate();
 
     const [userId, setUserId] = useState(0);
@@ -98,7 +98,7 @@ function Shop() {
             <main>
                 <div
                     className="hero-wrap hero-bread"
-                    style={{backgroundImage: 'url("https://www.adorama.com/alc/wp-content/uploads/2017/11/shutterstock_114802408.jpg")'}}
+                    style={{backgroundImage: 'url("https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSj9glE3o5bFuG97oV2D56MFCslGcuLGy-RVHcpUtIeiggZwPXL")'}}
                 >
                     <div className="container">
                         <div className="row no-gutters slider-text align-items-center justify-content-center">
@@ -123,7 +123,6 @@ function Shop() {
                                 <div className="row justify-content-center">
                                     <div className="col-xl-7 col-lg-8 col-md-10">
                                         <div className="section-tittle mb-70 text-center mt-4">
-                                            <h2>Shop</h2>
                                             <p>
                                                 Consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
                                                 labore et dolore magna aliqua. Quis ipsum suspendisse ultrices

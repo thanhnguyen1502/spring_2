@@ -12,4 +12,7 @@ public interface IProductService {
     Product findById(Integer productId);
 
     void setAmount(Integer amount, Integer productId);
+
+    List<Product> searchByName(String searchTerm);
+
 }

@@ -86,7 +86,7 @@ function Detail() {
             <div
                 className="hero-wrap hero-bread"
                 style={{
-                    backgroundImage: 'url("https://png.pngtree.com/background/20230517/original/pngtree-clock-scene-is-placed-in-the-middle-of-an-old-clock-picture-image_2637111.jpg")',
+                    backgroundImage: 'url("https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSj9glE3o5bFuG97oV2D56MFCslGcuLGy-RVHcpUtIeiggZwPXL")',
                 }}
             >
                 <div className="container">
@@ -121,8 +121,8 @@ function Detail() {
                                 />
                             </a>
                         </div>
-                        <div className="col-lg-6 productDetail-details pl-md-5 ">
-                            <h3>{productDetail.nameproductDetail}</h3>
+                        <div className="col-lg-6 productDetail-details pl-md-5 mt-3">
+                            <h3>{productDetail.productName}</h3>
                             <div className="rating d-flex">
                                 <p className="text-left mr-4">
                                     <a href="#" className="mr-2 text-decoration-none">

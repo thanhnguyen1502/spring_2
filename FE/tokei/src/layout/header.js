@@ -91,8 +91,8 @@ export const Header = () => {
         <header className={isMenuOpen ? "open" : ""} style={{marginTop: -20}}>
             {sessionStorage.getItem("roles") === "ADMIN" && (
                 <>
-                    <div className="header-area">
-                        <div className="main-header header-sticky" style={{height: 77}}>
+                    <div className="header-area" >
+                        <div className="main-header header-sticky" style={{height: 77, backgroundImage: "url(https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcTm1BwDqq7fNmMRKcYBwLU0i8eIewvqqINsXF9yUvHuID4jV--9)"}}>
                             <div className="container-fluid">
                                 <div className="menu-wrapper">
                                     <div className="logo">
@@ -182,7 +182,7 @@ export const Header = () => {
                     <>
 
                         <div className="header-area">
-                            <div className="main-header header-sticky" style={{height: 77}}>
+                            <div className="main-header header-sticky" style={{height: 77, backgroundImage: "url(https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSj9glE3o5bFuG97oV2D56MFCslGcuLGy-RVHcpUtIeiggZwPXL)"}}>
 
                                 <div className="container-fluid">
                                     <div className="menu-wrapper">
@@ -273,7 +273,7 @@ export const Header = () => {
                 !sessionStorage.getItem("TOKEN") && (
                     <>
                         <div className="header-area">
-                            <div className="main-header header-sticky" style={{height: 77}}>
+                            <div className="main-header header-sticky" style={{height: 77, backgroundImage: "url(https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSj9glE3o5bFuG97oV2D56MFCslGcuLGy-RVHcpUtIeiggZwPXL)"}}>
                                 <div className="container-fluid">
                                     <div className="menu-wrapper">
                                         <div className="logo">
